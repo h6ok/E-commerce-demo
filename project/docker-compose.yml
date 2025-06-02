@@ -1,5 +1,16 @@
 services:
 
+  authApp:
+    build:
+      context: ./../authentication-service
+      dockerfile: ./../authentication-service/authApp.dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+
   postgres-user:
     image: postgres:latest
     environment:

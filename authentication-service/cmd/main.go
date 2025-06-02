@@ -7,13 +7,18 @@ import (
 
 func main() {
 
-	config := config.GetConfig()
-
-	server, err := NewServer(config)
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Panic(err)
 	}
 
-	server.Start()
+	server, err := NewServer(&cfg)
+	if err != nil {
+		log.Panic(err)
+	}
 
+	err = server.Start()
+	if err != nil {
+		log.Panic(err)
+	}
 }

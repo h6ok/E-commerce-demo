@@ -1,0 +1,5 @@
+{
+    "port": "8080",
+    "driver": "postgres",
+    "dsn": "postgres://postgres:password@localhost:5432/users"
+}
