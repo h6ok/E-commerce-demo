@@ -1,5 +1,0 @@
-port: 8080
-database:
-  username: postgres
-  password: password
-  dbname: users

@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	"net/http"
 
+	"authentication/cmd/middleware"
 	"authentication/config"
+
+	_ "github.com/lib/pq"
 )
 
 type AuthServer struct {
-	DB     *sql.DB
-	Router *http.ServeMux
+	DB      *sql.DB
+	Handler http.Handler
 }
 
 func NewServer(config *config.Config) (*AuthServer, error) {
@@ -19,16 +22,17 @@ func NewServer(config *config.Config) (*AuthServer, error) {
 		return &AuthServer{}, err
 	}
 
-	router := Router()
+	router := http.NewServeMux()
+	handler := SetMiddleware(router)
 
 	return &AuthServer{
-		DB:     db,
-		Router: router,
+		DB:      db,
+		Handler: handler,
 	}, nil
 }
 
 func (server *AuthServer) Start() error {
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", server.Handler)
 	if err != nil {
 		return err
 	}
@@ -42,4 +46,11 @@ func ConnectDB(driver string, dsn string) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func SetMiddleware(router *http.ServeMux) http.Handler {
+	return middleware.CreateMiddleware(
+		middleware.EnableCORS,
+		middleware.AuthMiddleware,
+	)(router)
 }
