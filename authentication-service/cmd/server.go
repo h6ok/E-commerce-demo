@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"net/http"
 
-	"authentication/cmd/middleware"
 	"authentication/config"
 
 	_ "github.com/lib/pq"
@@ -49,8 +48,8 @@ func ConnectDB(driver string, dsn string) (*sql.DB, error) {
 }
 
 func SetMiddleware(router *http.ServeMux) http.Handler {
-	return middleware.CreateMiddleware(
-		middleware.EnableCORS,
-		middleware.AuthMiddleware,
+	return CreateMiddleware(
+		EnableCORS,
+		AuthMiddleware,
 	)(router)
 }

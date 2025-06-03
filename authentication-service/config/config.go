@@ -9,6 +9,7 @@ type Config struct {
 	Port   string `json:"port"`
 	Driver string `json:"driver"`
 	DSN    string `json:"dsn"`
+	Key    string `json:"key"`
 }
 
 func LoadConfig() (Config, error) {

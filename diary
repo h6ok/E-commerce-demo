@@ -57,6 +57,17 @@ CRUDはDBに移譲
 認証APIのほぼ完成を目指す
 ミドルウェアの設定でハマる、フレームワークないとなかなかむずい
 ラップがしょーみわからん、Compositionというみたいだが
+Middlewareという関数シグネチャを命名することでHttp.Handlerを受け取ってHttp.Hanlderを返す関数を定義できる
+ループないでどんどんラップ指定って最後にMuxをもらってHttp.Handlerを返す関数を返せば
+CreateMiddleware(xs ...Middleware) http.Handlerみたいなかんじにできる
+DokcerFIleの書き方⇨From,MKDIR、COPY、CMD
+
+＊タスク
+・ログイン実装
+・JWTトークン作成機能
+・JWTトークン認証機能
+・リフレッシュトークン機能
+
 
 
 
