@@ -15,25 +15,25 @@ type user struct {
 }
 
 type loginRequest struct {
-	id       string
-	password string
+	Id       string `json:"id"`
+	Password string `json:"password"`
 }
 
 const COST int = 10
 
 const SIGN_UP string = `
-	INSERT users (username, email, password)
-	VALUES (?, ?, ?); 
+	INSERT into "user" (username, email, password)
+	VALUES ($1, $2, $3); 
 	`
 
 const LOG_IN string = `
-	SELECT username, email, password FROM user WHERE email = ? LIMIT 1
+	SELECT username, email, password FROM "user" WHERE email = $1 LIMIT 1
 	`
 
 func Authenticate(server *AuthServer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var payload loginRequest
-		err := ReadJson(r, payload)
+		err := ReadJson(r, &payload)
 		if err != nil {
 			ErrorJson(w, err)
 			return
@@ -42,7 +42,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*10))
 		defer cancel()
 
-		row := server.DB.QueryRowContext(ctx, LOG_IN, payload.id)
+		row := server.DB.QueryRowContext(ctx, LOG_IN, payload.Id)
 		var user user
 		err = row.Scan(
 			&user.Username,
@@ -54,7 +54,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			return
 		}
 
-		err = bcrypt.CompareHashAndPassword([]byte(payload.password), []byte(user.Password))
+		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
 		if err != nil {
 			ErrorJson(w, err)
 			return
@@ -78,7 +78,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 func SignUp(server *AuthServer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var payload user
-		err := ReadJson(r, payload)
+		err := ReadJson(r, &payload)
 		if err != nil {
 			ErrorJson(w, err)
 			return

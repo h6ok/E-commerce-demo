@@ -13,7 +13,7 @@ func ReadJson(r *http.Request, obj any) error {
 		return err
 	}
 
-	err = json.Unmarshal(data, &obj)
+	err = json.Unmarshal(data, obj)
 	if err != nil {
 		return err
 	}
