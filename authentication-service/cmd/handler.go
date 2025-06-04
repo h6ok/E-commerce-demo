@@ -9,9 +9,9 @@ import (
 )
 
 type user struct {
-	Username string
-	Email    string
-	Password string
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type loginRequest struct {
@@ -22,7 +22,7 @@ type loginRequest struct {
 const COST int = 10
 
 const SIGN_UP string = `
-	INSERT user (username, email, password)
+	INSERT users (username, email, password)
 	VALUES (?, ?, ?); 
 	`
 
@@ -36,6 +36,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		err := ReadJson(r, payload)
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*10))
@@ -50,16 +51,19 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		)
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(payload.password), []byte(user.Password))
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		token, err := CreateToken()
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		data := struct {
@@ -77,6 +81,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		err := ReadJson(r, payload)
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*10))
@@ -85,6 +90,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		encrypted, err := bcrypt.GenerateFromPassword([]byte(payload.Password), COST)
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		_, err = server.DB.ExecContext(
@@ -96,6 +102,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 
 		if err != nil {
 			ErrorJson(w, err)
+			return
 		}
 
 		message := struct {

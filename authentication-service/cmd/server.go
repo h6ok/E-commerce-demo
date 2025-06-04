@@ -21,13 +21,15 @@ func NewServer(config *config.Config) (*AuthServer, error) {
 		return &AuthServer{}, err
 	}
 
-	router := http.NewServeMux()
-	handler := SetMiddleware(router)
+	server := AuthServer{
+		DB: db,
+	}
 
-	return &AuthServer{
-		DB:      db,
-		Handler: handler,
-	}, nil
+	router := http.NewServeMux()
+	server.SetAuthHandler(router)
+	server.Handler = SetMiddleware(router)
+
+	return &server, nil
 }
 
 func (server *AuthServer) Start() error {
@@ -52,4 +54,9 @@ func SetMiddleware(router *http.ServeMux) http.Handler {
 		EnableCORS,
 		AuthMiddleware,
 	)(router)
+}
+
+func (server *AuthServer) SetAuthHandler(mux *http.ServeMux) {
+	mux.HandleFunc("/authenticate", Authenticate(server))
+	mux.HandleFunc("/sign-up", SignUp(server))
 }

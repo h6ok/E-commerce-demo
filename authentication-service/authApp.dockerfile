@@ -4,4 +4,6 @@ RUN mkdir /app
 
 COPY authApp /app
 
-CMD ["go run /app/authApp"]
+COPY config/config.json /config/config.json
+
+CMD ["/app/authApp"]
