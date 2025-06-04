@@ -68,6 +68,14 @@ DokcerFIleの書き方⇨From,MKDIR、COPY、CMD
 ・JWTトークン認証機能
 ・リフレッシュトークン機能
 
+6/3
+サインアップとログイン機能整備
+JWTの生成、検証は未実装
+InitSQLの作成後DokcerCOmposeで起動確認と動作確認
+明日はBrokerからKafkaにメッセージ飛ばしてやりとりできるか、もしくはGRPCでAuthできるか見ていく
+
+6/4
+
 
 
 
