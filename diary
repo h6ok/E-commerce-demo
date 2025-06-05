@@ -60,7 +60,7 @@ CRUDはDBに移譲
 Middlewareという関数シグネチャを命名することでHttp.Handlerを受け取ってHttp.Hanlderを返す関数を定義できる
 ループないでどんどんラップ指定って最後にMuxをもらってHttp.Handlerを返す関数を返せば
 CreateMiddleware(xs ...Middleware) http.Handlerみたいなかんじにできる
-DokcerFIleの書き方⇨From,MKDIR、COPY、CMD
+DokcerFIleの書き方⇨From,MKDIR、WORKDIR⇨ワーキングディレクトリの設定、COPY、CMD
 
 ＊タスク
 ・ログイン実装
@@ -75,8 +75,13 @@ InitSQLの作成後DokcerCOmposeで起動確認と動作確認
 明日はBrokerからKafkaにメッセージ飛ばしてやりとりできるか、もしくはGRPCでAuthできるか見ていく
 
 6/4
+サインアップと認証機能実装
+DBコネクトの際はCOmposen場合はLocalhostではなくサービス名で指定
+Dockerfileを作成するときにビルド対象のファイルすべてをいれるのではなく必要なCOnfigとかも持っていく
+マルチステージビルドにできるとなおよし
+HS256とES256で必要なKeyが違うみたい
 
-
+次はBrokerを噛ませてAuthを呼び出すようにするAuthに対してはgRPCで行ってみたいわざわざKafka使うのも変かな
 
 
 
