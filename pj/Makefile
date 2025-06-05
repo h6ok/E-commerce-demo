@@ -1,4 +1,4 @@
-build_gateway
+build_gateway:
 	@echo "building api-gateway..."
 	cd ../api-gateway && GOOS=linux CGO_ENABLE=0 go build -o api-gateway ./cmd
 
@@ -9,7 +9,7 @@ build_auth:
 db_volumes:
 	mkdir db-data/auth-data
 
-up_build:build_auth db_volumes
+up_build:build_gateway build_auth db_volumes
 	@echo "building images..."
 	docker compose down
 	docker compose up -d
@@ -19,3 +19,6 @@ down:
 	docker compose down -v
 	@echo "remove db volumes"
 	rm -rf db-data/auth-data
+	@echo "remove images..."
+	docker rmi pj-api-gateway:latest
+	docker rmi pj-auth-service:latest
