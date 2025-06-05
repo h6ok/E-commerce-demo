@@ -1,12 +1,23 @@
 services:
 
+  api-gateway:
+    build:
+      context: ./../api-gateway
+      dockerfile: ./../api-gateway/api-gateway.dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+
   auth-service:
     build:
       context: ./../authentication-service
       dockerfile: ./../authentication-service/authApp.dockerfile
     restart: always
     ports:
-      - "8080:8080"
+      - "8080"
     deploy:
       mode: replicated
       replicas: 1

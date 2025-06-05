@@ -1,7 +1,10 @@
+build_gateway
+	@echo "building api-gateway..."
+	cd ../api-gateway && GOOS=linux CGO_ENABLE=0 go build -o api-gateway ./cmd
+
 build_auth:
 	@echo "building authApp..."
 	cd ../authentication-service && GOOS=linux CGO_ENABLE=0 go build -o authApp ./cmd
-	@echo "Done!"
 
 db_volumes:
 	mkdir db-data/auth-data

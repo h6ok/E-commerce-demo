@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 const DURATION time.Duration = time.Duration(time.Hour * 24)
@@ -14,9 +15,10 @@ func CreateToken() (string, error) {
 		"exp":     time.Now().Add(time.Hour * 72).Unix(),
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	accessToken, err := token.SignedString([]byte("aaaaaa"))
 	if err != nil {
+		log.Println("token cannot published")
 		return "", err
 	}
 
