@@ -6,7 +6,7 @@ services:
       dockerfile: ./../api-gateway/api-gateway.dockerfile
     restart: always
     ports:
-      - "8080:8080"
+      - "8081:8081"
     deploy:
       mode: replicated
       replicas: 1
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: users
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - ./sql/auth:/docker-entrypoint-initdb.d
       - ./db-data/auth-data/:/var/lib/postgresql/data
