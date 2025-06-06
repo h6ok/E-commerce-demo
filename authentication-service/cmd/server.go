@@ -5,13 +5,15 @@ import (
 	"net/http"
 
 	"authentication/config"
+	"authentication/kafka"
 
 	_ "github.com/lib/pq"
 )
 
 type AuthServer struct {
-	DB      *sql.DB
-	Handler http.Handler
+	DB       *sql.DB
+	Handler  http.Handler
+	Producer *kafka.KafkaProducer
 }
 
 func NewServer(config *config.Config) (*AuthServer, error) {
@@ -24,6 +26,12 @@ func NewServer(config *config.Config) (*AuthServer, error) {
 	server := AuthServer{
 		DB: db,
 	}
+
+	producer, err := kafka.NewKafkaProducer()
+	if err != nil {
+		return &AuthServer{}, err
+	}
+	server.Producer = producer
 
 	router := http.NewServeMux()
 	server.SetAuthHandler(router)
