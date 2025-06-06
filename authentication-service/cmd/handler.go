@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/hiroaki-th/response"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,6 +18,13 @@ type user struct {
 type loginRequest struct {
 	Id       string `json:"id"`
 	Password string `json:"password"`
+}
+
+type AuthEvent struct {
+	Type      string    `json:"type"`
+	Username  string    `json:"username,omitempty"`
+	IP        string    `json:"ip"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 const COST int = 10
@@ -50,19 +58,19 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			&user.Password,
 		)
 		if err != nil {
-			ErrorJson(w, err)
+			response.ServerError(w).Json().SetBody(err).Return()
 			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
 		if err != nil {
-			ErrorJson(w, err)
+			response.ServerError(w).Json().SetBody(err).Return()
 			return
 		}
 
 		token, err := CreateToken()
 		if err != nil {
-			ErrorJson(w, err)
+			response.ServerError(w).Json().SetBody(err).Return()
 			return
 		}
 
@@ -71,7 +79,15 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		}{
 			Token: token,
 		}
-		WriteJson(w, data, http.StatusAccepted)
+
+		event := AuthEvent{
+			Type:      "authenticate",
+			Username:  user.Username,
+			IP:        r.RemoteAddr,
+			Timestamp: time.Now(),
+		}
+		go server.Producer.PublishAuthEvent(event)
+		response.Success(w).Json().SetBody(data).Return()
 	}
 }
 
@@ -80,7 +96,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		var payload user
 		err := ReadJson(r, &payload)
 		if err != nil {
-			ErrorJson(w, err)
+			response.BadRequest(w).Json().SetBody(err).Return()
 			return
 		}
 
@@ -89,7 +105,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 
 		encrypted, err := bcrypt.GenerateFromPassword([]byte(payload.Password), COST)
 		if err != nil {
-			ErrorJson(w, err)
+			response.ServerError(w).Json().SetBody(err).Return()
 			return
 		}
 
@@ -101,7 +117,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			encrypted)
 
 		if err != nil {
-			ErrorJson(w, err)
+			response.ServerError(w).Json().SetBody(err).Return()
 			return
 		}
 
@@ -110,6 +126,14 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		}{
 			Message: "sign-up successfully done!",
 		}
-		WriteJson(w, message, http.StatusAccepted)
+
+		event := AuthEvent{
+			Type:      "sign-up",
+			Username:  payload.Username,
+			IP:        r.RemoteAddr,
+			Timestamp: time.Now(),
+		}
+		go server.Producer.PublishAuthEvent(event)
+		response.Success(w).Json().SetBody(message).Return()
 	}
 }
