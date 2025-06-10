@@ -30,7 +30,7 @@ func (kp *KafkaProducer) PublishAuthEvent(data any) error {
 	}
 
 	msg := &sarama.ProducerMessage{
-		Topic: "auth-event",
+		Topic: "auth-events",
 		Value: sarama.StringEncoder(json),
 	}
 

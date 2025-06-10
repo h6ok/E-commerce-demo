@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hiroaki-th/response"
+	"github.com/h6ok/response"
 )
 
 func main() {

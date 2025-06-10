@@ -2,7 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
+	"time"
 
 	"authentication/config"
 	"authentication/kafka"
@@ -27,11 +29,19 @@ func NewServer(config *config.Config) (*AuthServer, error) {
 		DB: db,
 	}
 
-	producer, err := kafka.NewKafkaProducer()
-	if err != nil {
-		return &AuthServer{}, err
+	// backoff to connect to kafka
+	for {
+		producer, err := kafka.NewKafkaProducer()
+		if err != nil {
+			log.Println("kafka is not ready...")
+			time.Sleep(2 * time.Second)
+			continue
+		} else {
+			server.Producer = producer
+			log.Println("successfully connected to kafka")
+			break
+		}
 	}
-	server.Producer = producer
 
 	router := http.NewServeMux()
 	server.SetAuthHandler(router)
