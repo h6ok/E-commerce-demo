@@ -2,3 +2,4 @@ pj/db-data
 api-gateway/api-gateway
 authentication-service/authApp
 log-service/logApp
+diary
