@@ -105,3 +105,10 @@ log-serviceの方はできたからあとはKafkaたてて認証からのPubと�
 Kafkaとzookeeperの関係性⇨Zookeeperが管理者で作業者がKafkaになる
 実際のイベント送信はKafkaのポートに送るようにする
 Kafka関連のProducerとConsumerでそれぞれこーどを設定する必要がある
+KafkaのライブラリでIBM/saramaを使用、
+とにかくPublishしてSubscribeしたイベントに対して内容を読み取って処理をするようにすればいい
+
+6/8
+Consumerの設定
+認証kらイベントPublishしてログ登録まで
+Bsonの記載方法

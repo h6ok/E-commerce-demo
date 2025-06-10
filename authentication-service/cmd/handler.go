@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
-	"github.com/hiroaki-th/response"
+	"github.com/h6ok/response"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -79,6 +80,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		}{
 			Token: token,
 		}
+		d, _ := json.Marshal(data)
 
 		event := AuthEvent{
 			Type:      "authenticate",
@@ -87,7 +89,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			Timestamp: time.Now(),
 		}
 		go server.Producer.PublishAuthEvent(event)
-		response.Success(w).Json().SetBody(data).Return()
+		w.Write(d)
 	}
 }
 
@@ -126,6 +128,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		}{
 			Message: "sign-up successfully done!",
 		}
+		data, _ := json.Marshal(message)
 
 		event := AuthEvent{
 			Type:      "sign-up",
@@ -134,6 +137,6 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			Timestamp: time.Now(),
 		}
 		go server.Producer.PublishAuthEvent(event)
-		response.Success(w).Json().SetBody(message).Return()
+		w.Write(data)
 	}
 }

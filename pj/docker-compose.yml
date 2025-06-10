@@ -12,6 +12,8 @@ services:
       replicas: 1
 
   auth-service:
+    depends_on: 
+      - kafka
     build:
       context: ./../authentication-service
       dockerfile: ./../authentication-service/authApp.dockerfile
@@ -23,6 +25,9 @@ services:
       replicas: 1
 
   log-service:
+    depends_on:
+      - kafka
+      - mongo-log
     build:
       context: ./../log-service
       dockerfile: ./../log-service/logApp.dockerfile
@@ -41,10 +46,11 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    platform: linux/arm64
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -52,6 +58,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_HEAP_OPTS: "-Xmx512m -Xms512m" 
 
   postgres-auth:
     image: postgres:latest
