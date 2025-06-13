@@ -1,25 +1,41 @@
 package kafka
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 
 	"github.com/IBM/sarama"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ConsumerGroupHandler struct {
-	Client *mongo.Client
+	Handler *MailHandler
+}
+
+type Event interface {
+	GetEmail() string
+	GetUsername() string
+	Of() string
 }
 
 type AuthEvent struct {
 	Type      string    `json:"type"`
 	Username  string    `json:"username,omitempty"`
+	Email     string    `json:"email"`
 	IP        string    `json:"ip"`
 	Timestamp time.Time `json:"timestamp"`
+}
+
+func (authEvent *AuthEvent) Of() string {
+	return "auth"
+}
+
+func (authEvent *AuthEvent) GetUsername() string {
+	return authEvent.Username
+}
+
+func (authEvent *AuthEvent) GetEmail() string {
+	return authEvent.Email
 }
 
 type SignUpEvent struct {
@@ -28,9 +44,22 @@ type SignUpEvent struct {
 	Email    string `json:"email"`
 }
 
-func NewConsumer(client *mongo.Client) *ConsumerGroupHandler {
+func (signUpEvent *SignUpEvent) Of() string {
+	return "sign-up"
+}
+
+func (signUpEvent *SignUpEvent) GetUsername() string {
+	return signUpEvent.Username
+}
+
+func (signUpEvent *SignUpEvent) GetEmail() string {
+	return signUpEvent.Email
+}
+
+func NewConsumer() *ConsumerGroupHandler {
+	handler := NewMailHandler()
 	return &ConsumerGroupHandler{
-		Client: client,
+		Handler: handler,
 	}
 }
 
@@ -48,19 +77,25 @@ func (handler *ConsumerGroupHandler) ConsumeClaim(
 	for msg := range claim.Messages() {
 		var authEvent AuthEvent
 		err := json.Unmarshal(msg.Value, &authEvent)
+
+		var signUpEvent SignUpEvent
 		if err != nil {
-			log.Println("cannot unmarshal event payload")
+			err = json.Unmarshal(msg.Value, &signUpEvent)
+		}
+
+		if err != nil {
+			log.Println("cannot unmarshal")
 			continue
 		}
 
-		coll := handler.Client.Database("logs").Collection("auth")
-		result, err := coll.InsertOne(context.TODO(), authEvent)
-
-		if err != nil {
-			log.Println(err)
-			continue
-		} else {
-			fmt.Printf("new log: insertID[%s]\n", result.InsertedID)
+	switchState:
+		switch {
+		case authEvent.Type != "":
+			handler.Handler.Send(&authEvent)
+			break switchState
+		case signUpEvent.Type != "":
+			handler.Handler.Send(&signUpEvent)
+			break switchState
 		}
 
 		session.MarkMessage(msg, "")

@@ -24,8 +24,15 @@ type loginRequest struct {
 type AuthEvent struct {
 	Type      string    `json:"type"`
 	Username  string    `json:"username,omitempty"`
+	Email     string    `json:"email,omitempty"`
 	IP        string    `json:"ip"`
 	Timestamp time.Time `json:"timestamp"`
+}
+
+type SignUpEvent struct {
+	Type     string `json:"type"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 const COST int = 10
@@ -85,6 +92,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		event := AuthEvent{
 			Type:      "authenticate",
 			Username:  user.Username,
+			Email:     user.Email,
 			IP:        r.RemoteAddr,
 			Timestamp: time.Now(),
 		}
@@ -130,13 +138,12 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		}
 		data, _ := json.Marshal(message)
 
-		event := AuthEvent{
-			Type:      "sign-up",
-			Username:  payload.Username,
-			IP:        r.RemoteAddr,
-			Timestamp: time.Now(),
+		event := SignUpEvent{
+			Type:     "sign-up",
+			Username: payload.Username,
+			Email:    payload.Email,
 		}
-		go server.Producer.PublishAuthEvent(event)
+		go server.Producer.PublishSignUpEvent(event)
 		w.Write(data)
 	}
 }

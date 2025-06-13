@@ -37,6 +37,19 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    
+  mail-service:
+    depends_on:
+      - kafka
+    build:
+      context: ./../mail-service
+      dockerfile: ./../mail-service/mailApp.dockerfile
+    restart: always
+    ports:
+      - "8080"
+    deploy:
+      mode: replicated
+      replicas: 1
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
