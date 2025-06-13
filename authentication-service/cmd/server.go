@@ -29,7 +29,6 @@ func NewServer(config *config.Config) (*AuthServer, error) {
 		DB: db,
 	}
 
-	// backoff to connect to kafka
 	for {
 		producer, err := kafka.NewKafkaProducer()
 		if err != nil {

@@ -37,3 +37,18 @@ func (kp *KafkaProducer) PublishAuthEvent(data any) error {
 	_, _, err = kp.Producer.SendMessage(msg)
 	return err
 }
+
+func (kp *KafkaProducer) PublishSignUpEvent(data any) error {
+	json, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	msg := &sarama.ProducerMessage{
+		Topic: "sign-up-events",
+		Value: sarama.StringEncoder(json),
+	}
+
+	_, _, err = kp.Producer.SendMessage(msg)
+	return err
+}
