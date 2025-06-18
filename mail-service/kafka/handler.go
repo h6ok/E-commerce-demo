@@ -32,7 +32,7 @@ func (handler *MailHandler) Send(data Event) error {
 		handler.Auth,
 		handler.From,
 		[]string{data.GetEmail()},
-		[]byte(GetMessage(data.Of())))
+		[]byte(GetMessage(data)))
 
 	if err != nil {
 		return err
