@@ -1,0 +1,17 @@
+Hi {{.Username}},
+
+Thank you for signing up for [Company Name]!
+
+To complete your registration, please verify your email address by clicking the link below:
+
+{{.VerificationURL}}
+
+This verification link will expire in 24 hours.
+
+If you didn't create an account with us, please ignore this email.
+
+Best regards,
+The [Company Name] Team
+
+---
+Having trouble with the link? Copy and paste it into your browser's address bar.

@@ -1,0 +1,25 @@
+Hi {{.Username}},
+
+We noticed a new login to your [Company Name] account.
+
+Login Details:
+- Time: {{.LoginTime}}
+- Location: {{.Location}}
+- Device: {{.Device}}
+- IP Address: {{.IPAddress}}
+
+If this was you, no action is needed.
+
+If you don't recognize this activity, please secure your account immediately by visiting:
+{{.SecurityURL}}
+
+We recommend:
+1. Changing your password
+2. Reviewing your recent account activity
+3. Enabling two-factor authentication if not already active
+
+Best regards,
+The [Company Name] Security Team
+
+---
+Questions? Contact our support team at support@[company].com
