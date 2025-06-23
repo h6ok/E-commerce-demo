@@ -1,7 +1,19 @@
 package kafka
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
+	"log"
+	"text/template"
+	"time"
+)
+
+const (
+	authTemplateHtml   = "/app/auth.html"
+	authTemplateText   = "/app/auth.txt"
+	signUpTemplateHtml = "/app/sign-up.html"
+	signUpTemplateText = "/app/sign-up.txt"
 )
 
 type Message struct {
@@ -13,7 +25,7 @@ type Message struct {
 }
 
 func (msg *Message) BuildMessage() string {
-	boundary := ""
+	boundary := "boundary"
 
 	// ヘッダー部分
 	headers := fmt.Sprintf("From: %s\r\n", msg.From)
@@ -26,17 +38,17 @@ func (msg *Message) BuildMessage() string {
 	// テキスト部分
 	textPart := fmt.Sprintf("--%s\r\n", boundary)
 	textPart += "Content-Type: text/plain; charset=utf-8\r\n"
-	textPart += "Content-Transfer-Encoding: 8bit\r\n"
+	textPart += "Content-Transfer-Encoding: base64\r\n"
 	textPart += "\r\n"
-	textPart += msg.TextBody + "\r\n"
+	textPart += base64.StdEncoding.EncodeToString([]byte(msg.TextBody)) + "\r\n"
 	textPart += "\r\n"
 
 	// HTML部分
 	htmlPart := fmt.Sprintf("--%s\r\n", boundary)
 	htmlPart += "Content-Type: text/html; charset=utf-8\r\n"
-	htmlPart += "Content-Transfer-Encoding: 8bit\r\n"
+	htmlPart += "Content-Transfer-Encoding: base64\r\n"
 	htmlPart += "\r\n"
-	htmlPart += msg.HtmlBody + "\r\n"
+	htmlPart += base64.StdEncoding.EncodeToString([]byte(msg.HtmlBody)) + "\r\n"
 	htmlPart += "\r\n"
 
 	// 終了境界
@@ -56,17 +68,70 @@ func GetMessage(event Event) string {
 }
 
 func GetAuthMessage(event Event) string {
-	// get html template
+	data := map[string]string{
+		"Username":  event.GetUsername(),
+		"LoginTime": time.Now().String(),
+		"Location":  "Japan",
+		"Device":    "Laptop",
+		"IPAddress": "Local",
+	}
 
-	// get plain text template
+	// prep html template
+	var hb bytes.Buffer
+	ht := template.Must(template.ParseFiles(authTemplateHtml))
+	err := ht.Execute(&hb, data)
+	if err != nil {
+		log.Panic()
+	}
 
-	return ""
+	// prep text template
+	var tb bytes.Buffer
+	tt := template.Must(template.ParseFiles(authTemplateText))
+	err = tt.Execute(&tb, data)
+	if err != nil {
+		log.Panic()
+	}
+
+	msg := &Message{
+		From:     "taharahiroaki10@gmail.com",
+		To:       event.GetEmail(),
+		Subject:  "Auth Notification Service",
+		HtmlBody: hb.String(),
+		TextBody: tb.String(),
+	}
+
+	return msg.BuildMessage()
 }
 
 func GetSignUpMessage(event Event) string {
-	// get html template
+	data := map[string]string{
+		"Username":        event.GetUsername(),
+		"VerificationURL": "https://example.com",
+	}
 
-	// get plain text template
+	// prep html template
+	var hb bytes.Buffer
+	ht := template.Must(template.ParseFiles(signUpTemplateHtml))
+	err := ht.Execute(&hb, data)
+	if err != nil {
+		log.Panic()
+	}
 
-	return ""
+	// prep text template
+	var tb bytes.Buffer
+	tt := template.Must(template.ParseFiles(signUpTemplateText))
+	err = tt.Execute(&tb, data)
+	if err != nil {
+		log.Panic()
+	}
+
+	msg := &Message{
+		From:     "taharahiroaki10@gmail.com",
+		To:       event.GetEmail(),
+		Subject:  "Sign-Up Notification Service",
+		HtmlBody: hb.String(),
+		TextBody: tb.String(),
+	}
+
+	return msg.BuildMessage()
 }

@@ -23,7 +23,7 @@ down:
 	@echo "down all containers..."
 	docker compose down -v
 	@echo "remove images..."
-	docker rmi pj-api-gateway:latest
-	docker rmi pj-auth-service:latest
-	docker rmi pj-log-service:latest
-	docker rmi pj-mail-service:latest
+	docker rmi project-api-gateway:latest
+	docker rmi project-auth-service:latest
+	docker rmi project-log-service:latest
+	docker rmi project-mail-service:latest
