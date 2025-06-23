@@ -16,6 +16,7 @@ type Event interface {
 	GetEmail() string
 	GetUsername() string
 	Of() string
+	GetType() string
 }
 
 type AuthEvent struct {
@@ -28,6 +29,10 @@ type AuthEvent struct {
 
 func (authEvent *AuthEvent) Of() string {
 	return "auth"
+}
+
+func (authEvent *AuthEvent) GetType() string {
+	return authEvent.Type
 }
 
 func (authEvent *AuthEvent) GetUsername() string {
@@ -46,6 +51,10 @@ type SignUpEvent struct {
 
 func (signUpEvent *SignUpEvent) Of() string {
 	return "sign-up"
+}
+
+func (signUpEvent *SignUpEvent) GetType() string {
+	return signUpEvent.Type
 }
 
 func (signUpEvent *SignUpEvent) GetUsername() string {
@@ -75,30 +84,36 @@ func (handler *ConsumerGroupHandler) ConsumeClaim(
 	session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 
 	for msg := range claim.Messages() {
-		var authEvent AuthEvent
-		err := json.Unmarshal(msg.Value, &authEvent)
 
-		var signUpEvent SignUpEvent
-		if err != nil {
-			err = json.Unmarshal(msg.Value, &signUpEvent)
+		switch msg.Topic {
+		case "auth-events":
+			var authEvent AuthEvent
+			err := json.Unmarshal(msg.Value, &authEvent)
+			if err != nil {
+				log.Println("cannot unmarshal")
+			}
+
+			err = handler.Handler.Send(&authEvent)
+			if err != nil {
+				log.Println(err)
+			}
+
+		case "sign-up-events":
+			var signUpEvent SignUpEvent
+			err := json.Unmarshal(msg.Value, &signUpEvent)
+			if err != nil {
+				log.Println("cannot unmarshal")
+				return err
+			}
+
+			err = handler.Handler.Send(&signUpEvent)
+			if err != nil {
+				log.Println(err)
+			}
+
+		default:
+			log.Printf("caught unknown event. topic is [%s]", msg.Topic)
 		}
-
-		if err != nil {
-			log.Println("cannot unmarshal")
-			continue
-		}
-
-	switchState:
-		switch {
-		case authEvent.Type != "":
-			handler.Handler.Send(&authEvent)
-			break switchState
-		case signUpEvent.Type != "":
-			handler.Handler.Send(&signUpEvent)
-			break switchState
-		}
-
-		session.MarkMessage(msg, "")
 	}
 	return nil
 }
