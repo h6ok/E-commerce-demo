@@ -27,7 +27,6 @@ type Message struct {
 func (msg *Message) BuildMessage() string {
 	boundary := "boundary"
 
-	// ヘッダー部分
 	headers := fmt.Sprintf("From: %s\r\n", msg.From)
 	headers += fmt.Sprintf("To: %s\r\n", msg.To)
 	headers += fmt.Sprintf("Subject: %s\r\n", msg.Subject)
@@ -35,7 +34,6 @@ func (msg *Message) BuildMessage() string {
 	headers += fmt.Sprintf("Content-Type: multipart/alternative; boundary=\"%s\"\r\n", boundary)
 	headers += "\r\n"
 
-	// テキスト部分
 	textPart := fmt.Sprintf("--%s\r\n", boundary)
 	textPart += "Content-Type: text/plain; charset=utf-8\r\n"
 	textPart += "Content-Transfer-Encoding: base64\r\n"
@@ -43,7 +41,6 @@ func (msg *Message) BuildMessage() string {
 	textPart += base64.StdEncoding.EncodeToString([]byte(msg.TextBody)) + "\r\n"
 	textPart += "\r\n"
 
-	// HTML部分
 	htmlPart := fmt.Sprintf("--%s\r\n", boundary)
 	htmlPart += "Content-Type: text/html; charset=utf-8\r\n"
 	htmlPart += "Content-Transfer-Encoding: base64\r\n"
@@ -51,7 +48,6 @@ func (msg *Message) BuildMessage() string {
 	htmlPart += base64.StdEncoding.EncodeToString([]byte(msg.HtmlBody)) + "\r\n"
 	htmlPart += "\r\n"
 
-	// 終了境界
 	endBoundary := fmt.Sprintf("--%s--\r\n", boundary)
 
 	return headers + textPart + htmlPart + endBoundary
@@ -69,11 +65,11 @@ func GetMessage(event Event) string {
 
 func GetAuthMessage(event Event) string {
 	data := map[string]string{
-		"Username":  event.GetUsername(),
-		"LoginTime": time.Now().String(),
-		"Location":  "Japan",
-		"Device":    "Laptop",
-		"IPAddress": "Local",
+		"Username":    event.GetUsername(),
+		"LoginTime":   time.Now().String(),
+		"Location":    "Nowhere",
+		"Device":      "Your Device",
+		"SecurityURL": "https://example.com",
 	}
 
 	// prep html template
@@ -93,7 +89,7 @@ func GetAuthMessage(event Event) string {
 	}
 
 	msg := &Message{
-		From:     "taharahiroaki10@gmail.com",
+		From:     "E-Commerce-Demo Application",
 		To:       event.GetEmail(),
 		Subject:  "Auth Notification Service",
 		HtmlBody: hb.String(),
@@ -126,7 +122,7 @@ func GetSignUpMessage(event Event) string {
 	}
 
 	msg := &Message{
-		From:     "taharahiroaki10@gmail.com",
+		From:     "E-Commerce-Demo Application",
 		To:       event.GetEmail(),
 		Subject:  "Sign-Up Notification Service",
 		HtmlBody: hb.String(),
