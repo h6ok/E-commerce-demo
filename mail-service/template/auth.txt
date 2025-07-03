@@ -6,7 +6,6 @@ Login Details:
 - Time: {{.LoginTime}}
 - Location: {{.Location}}
 - Device: {{.Device}}
-- IP Address: {{.IPAddress}}
 
 If this was you, no action is needed.
 
@@ -19,7 +18,7 @@ We recommend:
 3. Enabling two-factor authentication if not already active
 
 Best regards,
-The [Company Name] Security Team
+The E-Commerce-Demo Security Team
 
 ---
-Questions? Contact our support team at support@[company].com
+Questions? Contact our support team at support@e-commerce-demo.com
