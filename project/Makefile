@@ -14,6 +14,9 @@ build_mail:
 	@echo "building mailApp..."
 	cd ../mail-service && GOOS=linux CGO_ENABLE=0 go build -o mailApp ./cmd
 
+build_front-end:
+	@echo "building front-end"
+
 up_build:build_gateway build_auth build_mail build_log
 	@echo "building images..."
 	docker compose down
@@ -27,3 +30,4 @@ down:
 	docker rmi project-auth-service:latest
 	docker rmi project-log-service:latest
 	docker rmi project-mail-service:latest
+	docker rmi project-front-end:latest
