@@ -1,5 +1,4 @@
 services:
-
   api-gateway:
     build:
       context: ./../api-gateway
@@ -12,7 +11,7 @@ services:
       replicas: 1
 
   auth-service:
-    depends_on: 
+    depends_on:
       - kafka
     build:
       context: ./../authentication-service
@@ -37,7 +36,7 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    
+
   mail-service:
     depends_on:
       - kafka
@@ -71,7 +70,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_HEAP_OPTS: "-Xmx512m -Xms512m" 
+      KAFKA_HEAP_OPTS: "-Xmx512m -Xms512m"
 
   postgres-auth:
     image: postgres:latest
@@ -83,7 +82,7 @@ services:
       - "5432"
     volumes:
       - ./sql/auth:/docker-entrypoint-initdb.d
-    
+
   mongo-log:
     image: mongo:latest
     environment:
@@ -93,15 +92,15 @@ services:
     ports:
       - "27017:27017"
 
-  front-end:
-    build:
-      context: ./../front-end
-      dockerfile: ./../front-end/front-end.dockerfile
-    restart: always
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./../front-end:/app
-      - /app/node_modules
-    stdin_open: true
-    tty: true
+  # front-end:
+  #   build:
+  #     context: ./../front-end
+  #     dockerfile: ./../front-end/front-end.dockerfile
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./../front-end:/app
+  #     - /app/node_modules
+  #   stdin_open: true
+  #   tty: true
+
