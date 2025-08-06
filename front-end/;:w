@@ -1,0 +1,42 @@
+import { ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
+
+type HeaderElementProps = {
+  label?: string
+  path: string
+  width: number
+  children: ReactNode
+}
+
+const baseStyle = "flex items-center justify-center";
+
+export default function Header() {
+  const navigate = useNavigate();
+
+  const handleClick = (path: string) => {
+    navigate(path);
+  }
+
+  function HeaderElement({
+    label,
+    path,
+    width
+    children
+  }: HeaderElementProps) {
+    const style = `w-${width}/12 ${baseStyle}`;
+    return (
+       <div
+        onClick={() => handleClick(path)}
+        className={style}>
+          <div>
+          {label}
+          {children}
+          </div>
+        </div>
+    );
+  }
+
+  return (
+  
+  );
+}
