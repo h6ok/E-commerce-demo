@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
+import LogoImg from "./../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FaUserLarge } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
+import { AiFillNotification } from "react-icons/ai";
 
 type HeaderElementProps = {
   label?: string;
@@ -22,8 +24,11 @@ export default function Header() {
   function HeaderElement({ label, path, width, children }: HeaderElementProps) {
     const style = `w-${width}/12 ${baseStyle}`;
     return (
-      <div onClick={() => handleClick(path)} className={style}>
-        <div>
+      <div className={style}>
+        <div
+          className="cursor-pointer transition duration-700 ease-in-out hover:-translate-y-1 hover:scale-110"
+          onClick={() => handleClick(path)}
+        >
           {label}
           {children}
         </div>
@@ -31,13 +36,26 @@ export default function Header() {
     );
   }
 
+  function Logo() {
+    return (
+      <div>
+        <img src={LogoImg} />
+      </div>
+    );
+  }
+
   return (
-    <div className="h-24 bg-white flex font-sans text-2xl text-black">
-      <HeaderElement label="E-Commerce" path="/" width="2" />
+    <div className="sticky top-0 overflow-hidden h-30 bg-white flex font-sans text-2xl text-black">
+      <HeaderElement path="/home" width="2" children={<Logo />} />
       <HeaderElement label="Men" path="/men" width="1" />
       <HeaderElement label="Women" path="/women" width="1" />
       <HeaderElement label="Kids" path="/kids" width="1" />
       <div className="w-5/12"></div>
+      <HeaderElement
+        path="/norification"
+        width="1"
+        children={<AiFillNotification />}
+      />
       <HeaderElement path="/login" width="1" children={<FaUserLarge />} />
       <HeaderElement path="/cart" width="1" children={<FaShoppingCart />} />
     </div>
