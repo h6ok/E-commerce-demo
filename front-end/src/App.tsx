@@ -1,19 +1,25 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
-import Home from "./components/Home";
+import Layout from "./components/Layout";
 import Login from "./feature/login/Login";
+import Home from "./feature/home/Home";
+import Men from "./feature/men/Men";
+import Women from "./feature/women/Women";
+import Kids from "./feature/kids/Kids";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Home />}>
+          <Route path="/" element={<Layout />}>
+            <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/men" element={<div>men</div>} />
-            <Route path="/women" element={<div>women</div>} />
-            <Route path="/kids" element={<div>kids</div>} />
+            <Route path="/cart" element={<div>cart</div>} />
+            <Route path="/men" element={<Men />} />
+            <Route path="/women" element={<Women />} />
+            <Route path="/kids" element={<Kids />} />
           </Route>
         </Routes>
       </AuthProvider>
