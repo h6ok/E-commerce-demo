@@ -52,7 +52,7 @@ export default function Header() {
       <HeaderElement label="Kids" path="/kids" width="1" />
       <div className="w-5/12"></div>
       <HeaderElement
-        path="/norification"
+        path="/notifications"
         width="1"
         children={<AiFillNotification />}
       />

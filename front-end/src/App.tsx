@@ -7,6 +7,7 @@ import Home from "./feature/home/Home";
 import Men from "./feature/men/Men";
 import Women from "./feature/women/Women";
 import Kids from "./feature/kids/Kids";
+import Notifications from "./feature/notifications/Notifications";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cart" element={<div>cart</div>} />
             <Route path="/men" element={<Men />} />

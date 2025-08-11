@@ -4,7 +4,7 @@ import { FaFacebook, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <div className="text-base bg-gray-200 bottom-0 overflow-hidden h-60 flex font-sans text-black">
+    <div className="bg-gray-200 bottom-0 overflow-hidden h-60 flex font-sans text-black">
       <div className="h-40 w-1/3 items-center flex flex-col">
         <div className="pt-10">2025 ©︎ Trek Japan</div>
         <div className="pt-10 grid grid-cols-3 gap-5">
@@ -14,7 +14,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-1/3 items-center flex flex-col">
-        <ul className="text-base pt-10 list-inside">
+        <ul className="pt-10 list-inside">
           <li>FAQ</li>
           <li>Contact Us</li>
           <li>Shipping + Duties & Taxes</li>
@@ -27,13 +27,14 @@ export default function Footer() {
         <div className="text-base pt-10">NewsLetters</div>
         <div className="flex pt-5 justify-center items-center">
           <Input
-            value="a"
+            value="example@gmail.com"
             type="text"
             placeholder="email"
+            className="h-auto w-auto text-lg"
             onChange={(e) => console.log(e)}
           />
           <div className="pl-3 text-xs text-white">
-            <button className="bg-blue-500 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+            <button className="bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500">
               OK
             </button>
           </div>
