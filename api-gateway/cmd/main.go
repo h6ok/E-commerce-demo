@@ -83,8 +83,5 @@ func Post(w http.ResponseWriter, r *http.Request, url string) {
 		return
 	}
 
-	response.Success(w).
-		Json().
-		SetBody(obj).
-		Return()
+	w.Write(byte(obj))
 }
