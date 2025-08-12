@@ -3,12 +3,25 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/h6ok/response"
 )
+
+type Response struct {
+	Status    int          `json:"status"`
+	Data      any          `json:"data"`
+	Error     ErroResponse `json:"error"`
+	Timestamp time.Time    `json:"timestamp"`
+}
+
+type ErroResponse struct {
+	Message string `json:"message"`
+}
 
 func main() {
 	mux := http.NewServeMux()
@@ -76,12 +89,17 @@ func Post(w http.ResponseWriter, r *http.Request, url string) {
 		return
 	}
 
-	var obj interface{}
+	var obj Response
 	err = json.Unmarshal(data, &obj)
 	if err != nil {
 		response.BadRequest(w).SetError(err).Return()
 		return
 	}
 
-	w.Write(byte(obj))
+	response.Status(w, obj.Status).
+		CORS().
+		Json().
+		SetBody(obj.Data).
+		SetError(fmt.Errorf(obj.Error.Message)).
+		Return()
 }
