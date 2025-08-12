@@ -67,7 +67,7 @@ func ConnectDB(driver string, dsn string) (*sql.DB, error) {
 }
 
 func SetMiddleware(router *http.ServeMux) http.Handler {
-	return CreateMiddleware(
+	return CreateMiddleware( 
 		EnableCORS,
 		AuthMiddleware,
 	)(router)

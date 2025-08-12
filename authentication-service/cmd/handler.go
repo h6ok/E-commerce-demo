@@ -51,7 +51,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		var payload loginRequest
 		err := ReadJson(r, &payload)
 		if err != nil {
-			ErrorJson(w, err)
+			response.BadRequest(w).Json().SetError(err).Return()
 			return
 		}
 
@@ -66,19 +66,19 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			&user.Password,
 		)
 		if err != nil {
-			response.ServerError(w).Json().SetBody(err).Return()
+			response.ServerError(w).Json().SetError(err).Return()
 			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
 		if err != nil {
-			response.ServerError(w).Json().SetBody(err).Return()
+			response.ServerError(w).Json().SetError(err).Return()
 			return
 		}
 
 		token, err := CreateToken()
 		if err != nil {
-			response.ServerError(w).Json().SetBody(err).Return()
+			response.ServerError(w).Json().SetError(err).Return()
 			return
 		}
 
@@ -106,7 +106,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		var payload user
 		err := ReadJson(r, &payload)
 		if err != nil {
-			response.BadRequest(w).Json().SetBody(err).Return()
+			response.BadRequest(w).Json().SetError(err).Return()
 			return
 		}
 
@@ -115,7 +115,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 
 		encrypted, err := bcrypt.GenerateFromPassword([]byte(payload.Password), COST)
 		if err != nil {
-			response.ServerError(w).Json().SetBody(err).Return()
+			response.ServerError(w).Json().SetError(err).Return()
 			return
 		}
 
@@ -127,7 +127,7 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			encrypted)
 
 		if err != nil {
-			response.ServerError(w).Json().SetBody(err).Return()
+			response.ServerError(w).Json().SetError(err).Return()
 			return
 		}
 
