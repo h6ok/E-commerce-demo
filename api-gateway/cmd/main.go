@@ -63,36 +63,57 @@ func Ping() http.HandlerFunc {
 }
 
 func Post(w http.ResponseWriter, r *http.Request, url string) {
+	if r.Method == "OPTION" {
+		response.Success(w).CORS().Return()
+		return
+	}
+
 	client := &http.Client{}
 
 	rBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		response.BadRequest(w).SetError(err).Return()
+		response.BadRequest(w).CORS().Json().SetError(err).Return()
 		return
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(rBody))
 	if err != nil {
-		response.BadRequest(w).SetError(err).Return()
+		response.BadRequest(w).
+			CORS().
+			Json().
+			SetError(err).
+			Return()
 		return
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		response.BadRequest(w).SetError(err).Return()
+		response.BadRequest(w).
+			CORS().
+			Json().
+			SetError(err).
+			Return()
 		return
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		response.BadRequest(w).SetError(err).Return()
+		response.BadRequest(w).
+			CORS().
+			Json().
+			SetError(fmt.Errorf("cannot read resposne from auth service")).
+			Return()
 		return
 	}
 
 	var obj Response
 	err = json.Unmarshal(data, &obj)
 	if err != nil {
-		response.BadRequest(w).SetError(err).Return()
+		response.BadRequest(w).
+			CORS().
+			Json().
+			SetError(err).
+			Return()
 		return
 	}
 

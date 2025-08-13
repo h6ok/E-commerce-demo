@@ -2,12 +2,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
 import Layout from "./components/Layout";
-import Login from "./feature/login/Login";
 import Home from "./feature/home/Home";
 import Men from "./feature/men/Men";
 import Women from "./feature/women/Women";
 import Kids from "./feature/kids/Kids";
 import Notifications from "./feature/notifications/Notifications";
+import User from "./feature/user/User";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/notifications" element={<Notifications />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/user" element={<User />} />
             <Route path="/cart" element={<div>cart</div>} />
             <Route path="/men" element={<Men />} />
             <Route path="/women" element={<Women />} />

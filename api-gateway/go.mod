@@ -2,4 +2,4 @@ module api-gateway
 
 go 1.23.0
 
-require github.com/h6ok/response v0.0.7 // indirect
+require github.com/h6ok/response v0.0.8
