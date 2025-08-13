@@ -1,18 +1,21 @@
 import { useState } from "react";
 import Input from "../../components/Input";
 import { END_POINT } from "../../consts/Const";
+import useAuth from "../../hooks/useAuth";
 
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin() {
+  const { setAuthenticated } = useAuth();
+
+  async function handleLogin() {
     const headers = {
       "Content-type": "application/json",
     };
 
     const body = JSON.stringify({
-      username: id,
+      id,
       password,
     });
 
@@ -22,16 +25,16 @@ export default function Login() {
       body,
     };
 
-    fetch(END_POINT.LOGIN, requestOptions)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-      .finally(() => {
-        console.log("end");
-      });
+    try {
+      const res = await fetch(END_POINT.LOGIN, requestOptions);
+      const data = await res.json();
+      console.log(data);
+      setAuthenticated(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log("end");
+    }
   }
 
   return (

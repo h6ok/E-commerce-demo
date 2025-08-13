@@ -56,7 +56,7 @@ export default function Header() {
         width="1"
         children={<AiFillNotification />}
       />
-      <HeaderElement path="/login" width="1" children={<FaUserLarge />} />
+      <HeaderElement path="/user" width="1" children={<FaUserLarge />} />
       <HeaderElement path="/cart" width="1" children={<FaShoppingCart />} />
     </div>
   );

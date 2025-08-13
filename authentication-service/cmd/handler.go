@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"time"
 
@@ -48,6 +47,12 @@ const LOG_IN string = `
 
 func Authenticate(server *AuthServer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Method == "OPTION" {
+			response.Success(w).Return()
+			return
+		}
+
 		var payload loginRequest
 		err := ReadJson(r, &payload)
 		if err != nil {
@@ -87,7 +92,6 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 		}{
 			Token: token,
 		}
-		d, _ := json.Marshal(data)
 
 		event := AuthEvent{
 			Type:      "authenticate",
@@ -97,7 +101,7 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			Timestamp: time.Now(),
 		}
 		go server.Producer.PublishAuthEvent(event)
-		w.Write(d)
+		response.Success(w).Json().SetBody(data).Return()
 	}
 }
 
@@ -136,7 +140,6 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 		}{
 			Message: "sign-up successfully done!",
 		}
-		data, _ := json.Marshal(message)
 
 		event := SignUpEvent{
 			Type:     "sign-up",
@@ -144,6 +147,6 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			Email:    payload.Email,
 		}
 		go server.Producer.PublishSignUpEvent(event)
-		w.Write(data)
+		response.Success(w).Json().SetBody(message).Return()
 	}
 }
