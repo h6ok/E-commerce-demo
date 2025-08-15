@@ -5,7 +5,7 @@ type BannerProps = {
 
 export default function Banner({ path, alt }: BannerProps) {
   return (
-    <div>
+    <div className="size-full">
       <img src={path} alt={alt} />
     </div>
   );

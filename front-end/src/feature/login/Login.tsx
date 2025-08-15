@@ -28,8 +28,7 @@ export default function Login() {
     try {
       const res = await fetch(END_POINT.LOGIN, requestOptions);
       const data = await res.json();
-      console.log(data);
-      setAuthenticated(true);
+      setAuthenticated(data != null);
     } catch (err) {
       console.log(err);
     } finally {
@@ -38,10 +37,7 @@ export default function Login() {
   }
 
   return (
-    <>
-      <div className="h-60 flex justify-center items-end-safe">
-        <div className="text-3xl">Sign In</div>
-      </div>
+    <div className="w-full">
       <div className="h-100 flex justify-center items-start">
         <div className="flex flex-col">
           <Input
@@ -68,6 +64,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
