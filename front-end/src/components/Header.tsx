@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserLarge } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { AiFillNotification } from "react-icons/ai";
+import useAuth from "../hooks/useAuth";
 
 type HeaderElementProps = {
   label?: string;
@@ -16,6 +17,8 @@ const baseStyle = "flex items-center justify-center";
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const { isAuthenticated } = useAuth();
 
   const handleClick = (path: string) => {
     navigate(path);
@@ -51,13 +54,18 @@ export default function Header() {
       <HeaderElement label="Women" path="/women" width="1" />
       <HeaderElement label="Kids" path="/kids" width="1" />
       <div className="w-5/12"></div>
-      <HeaderElement
-        path="/notifications"
-        width="1"
-        children={<AiFillNotification />}
-      />
+      {isAuthenticated && (
+        <>
+          <HeaderElement
+            path="/notifications"
+            width="1"
+            children={<AiFillNotification />}
+          />
+          <HeaderElement path="/cart" width="1" children={<FaShoppingCart />} />
+        </>
+      )}
+      {!isAuthenticated && <div className="w-2/12"></div>}
       <HeaderElement path="/user" width="1" children={<FaUserLarge />} />
-      <HeaderElement path="/cart" width="1" children={<FaShoppingCart />} />
     </div>
   );
 }
