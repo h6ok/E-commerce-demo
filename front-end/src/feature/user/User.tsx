@@ -23,7 +23,7 @@ export default function User() {
     <div className="size-full">
       {isAuthenticated && <div>You are Authenticated</div>}
       {!isAuthenticated && (
-        <div className="pt-20">
+        <div className="pt-10">
           <Tab tabs={TABS} />
         </div>
       )}

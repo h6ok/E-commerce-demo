@@ -17,12 +17,19 @@ export default function Tab({ tabs }: TabProps) {
     return id === selected;
   };
 
+  const tabStyle = (id: string) => {
+    if (id === selected) {
+      return "p-5 cursor-pointer text-3xl border-b-4 text-black";
+    }
+    return "p-5 cursor-pointer text-3xl border-b-4 text-gray-300";
+  };
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="flex items-center justify-center">
         {tabs.map((tab: TabChild) => (
           <div
-            className="p-5 cursor-pointer transition hover: text-lg"
+            className={tabStyle(tab.id)}
             key={tab.id}
             onClick={() => setSelected(tab.id)}
           >
@@ -31,7 +38,7 @@ export default function Tab({ tabs }: TabProps) {
         ))}
       </div>
       {tabs.map((tab: TabChild) => (
-        <>{isSelected(tab.id) && <div className="p-20">{tab.component}</div>}</>
+        <>{isSelected(tab.id) && <div className="p-15">{tab.component}</div>}</>
       ))}
     </div>
   );

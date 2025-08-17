@@ -41,6 +41,7 @@ export default function Login() {
       <div className="h-100 flex justify-center items-start">
         <div className="flex flex-col">
           <Input
+            label="email"
             className="pt-10 text-2xl"
             type="text"
             value={id}
@@ -48,6 +49,7 @@ export default function Login() {
             onChange={(e) => setId(e.target.value)}
           />
           <Input
+            label="password"
             className="pt-5 text-2xl"
             type="password"
             value={password}
