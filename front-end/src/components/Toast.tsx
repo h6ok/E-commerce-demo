@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { Variant } from "../context/ToastContext";
+import { useContext } from "react";
+import { ToastContext, type Variant } from "../context/ToastContext";
 
 type ToastProps = {
   title: string;
@@ -8,13 +8,18 @@ type ToastProps = {
 };
 
 export default function Toast({ title, message, variant }: ToastProps) {
-  const [isOpen, setOpen] = useState<boolean>(false);
+  const context = useContext(ToastContext);
+  if (!context) {
+    Toast({ title, message, variant });
+    return;
+  }
+  const { setOpen } = context;
 
   const color = () => {
     switch (variant) {
-      case "success":
-        return "bg-red-500";
       case "error":
+        return "bg-red-500";
+      case "success":
         return "bg-emerald-500";
       default:
         return "bg-grey-500";
@@ -22,14 +27,10 @@ export default function Toast({ title, message, variant }: ToastProps) {
   };
 
   return (
-    <>
-      {isOpen && (
-        <div className={color()}>
-          <div>{title}</div>
-          <div onClick={() => setOpen(false)}> X </div>
-          <div>{message}</div>
-        </div>
-      )}
-    </>
+    <div className={color()}>
+      <div>{title}</div>
+      <div onClick={() => setOpen(false)}> X </div>
+      <div>{message}</div>
+    </div>
   );
 }

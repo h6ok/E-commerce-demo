@@ -2,12 +2,14 @@ import { useState } from "react";
 import Input from "../../components/Input";
 import { END_POINT } from "../../consts/Const";
 import useAuth from "../../hooks/useAuth";
+import useToast from "../../hooks/useToast";
 
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const { setAuthenticated } = useAuth();
+  const showToast = useToast();
 
   async function handleLogin() {
     const headers = {
@@ -28,9 +30,15 @@ export default function Login() {
     try {
       const res = await fetch(END_POINT.LOGIN, requestOptions);
       const data = await res.json();
+      if (data.status !== 200) {
+        throw new Error("failed");
+      }
+
       setAuthenticated(data != null);
+      showToast("Success", "You are successfully authenticated", "success");
     } catch (err) {
       console.log(err);
+      showToast("Error", "Wrong email or password", "error");
     } finally {
       console.log("end");
     }

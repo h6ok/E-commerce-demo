@@ -11,10 +11,14 @@ export default function useToast() {
   const { setOpen, setTitle, setMessage, setVariant } = context;
 
   const showToast = (title: string, message: string, variant: Variant) => {
-    setOpen(true);
     setTitle(title);
     setMessage(message);
     setVariant(variant);
+    setOpen(true);
+    console.log("showToast");
+    setTimeout(() => {
+      setOpen(false);
+    }, 3000);
   };
 
   return showToast;
