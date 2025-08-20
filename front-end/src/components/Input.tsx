@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 
 type InputProps = {
+  name: string;
   label?: string;
   value: string | number | string[] | undefined;
   placeholder?: string;
@@ -10,6 +11,7 @@ type InputProps = {
 };
 
 export default function Input({
+  name,
   value,
   type,
   placeholder,
@@ -21,6 +23,7 @@ export default function Input({
     <div className={className}>
       {label && <div>{label}</div>}
       <input
+        name={name}
         className="border-2 border-gray-700 focus:border-pink-600"
         type={type}
         value={value}

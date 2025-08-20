@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import Toast from "../components/Toast";
 
 type Variant = "success" | "error" | "info";
 
@@ -34,6 +35,7 @@ function ToastProvider(props: { children: React.ReactNode }) {
 
   return (
     <ToastContext.Provider value={toastContext}>
+      {isOpen && <Toast title={title} message={message} variant={variant} />}
       {props.children}
     </ToastContext.Provider>
   );

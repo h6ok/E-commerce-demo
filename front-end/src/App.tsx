@@ -8,23 +8,12 @@ import Women from "./feature/women/Women";
 import Kids from "./feature/kids/Kids";
 import Notifications from "./feature/notifications/Notifications";
 import User from "./feature/user/User";
-import Toast from "./components/Toast";
-import { ToastContext, ToastProvider } from "./context/ToastContext";
-import { useContext } from "react";
+import { ToastProvider } from "./context/ToastContext";
 
 function App() {
-  const toastContext = useContext(ToastContext);
-
   return (
     <BrowserRouter>
       <ToastProvider>
-        {toastContext?.isOpen && (
-          <Toast
-            title={toastContext.title}
-            message={toastContext.message}
-            variant={toastContext.variant}
-          />
-        )}
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Layout />}>

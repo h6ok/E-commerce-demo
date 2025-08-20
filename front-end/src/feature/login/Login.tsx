@@ -1,38 +1,28 @@
 import { useState } from "react";
 import Input from "../../components/Input";
 import { END_POINT } from "../../consts/Const";
+import { Post } from "../../util/Http";
 import useAuth from "../../hooks/useAuth";
+import useToast from "../../hooks/useToast";
 
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const { setAuthenticated } = useAuth();
+  const showToast = useToast();
 
   async function handleLogin() {
-    const headers = {
-      "Content-type": "application/json",
-    };
-
-    const body = JSON.stringify({
-      id,
-      password,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers,
-      body,
-    };
-
     try {
-      const res = await fetch(END_POINT.LOGIN, requestOptions);
-      const data = await res.json();
+      const data = await Post(END_POINT.LOGIN, { id, password });
+      if (data.status !== 200) {
+        throw new Error("failed");
+      }
+
       setAuthenticated(data != null);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      console.log("end");
+      showToast("Success", "You are successfully authenticated", "success");
+    } catch (_) {
+      showToast("Error", "Wrong email or password", "error");
     }
   }
 
@@ -41,19 +31,19 @@ export default function Login() {
       <div className="h-100 flex justify-center items-start">
         <div className="flex flex-col">
           <Input
+            name="email"
             label="email"
             className="pt-10 text-2xl"
             type="text"
             value={id}
-            placeholder="email"
             onChange={(e) => setId(e.target.value)}
           />
           <Input
+            name="password"
             label="password"
             className="pt-5 text-2xl"
             type="password"
             value={password}
-            placeholder="password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="pt-10 flex justify-center">

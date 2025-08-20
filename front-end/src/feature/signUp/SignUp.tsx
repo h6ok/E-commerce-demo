@@ -1,5 +1,9 @@
 import { useState, type ChangeEvent } from "react";
 import Input from "../../components/Input";
+import { Post } from "../../util/Http";
+import { END_POINT } from "../../consts/Const";
+import useAuth from "../../hooks/useAuth";
+import useToast from "../../hooks/useToast";
 
 type UserData = {
   username: string;
@@ -7,17 +11,44 @@ type UserData = {
   password: string;
 };
 
+const DEFAULT_USER = {
+  username: "",
+  email: "",
+  password: "",
+};
+
 export default function SignUp() {
-  const [data, setData] = useState<UserData | null>(null);
+  const [data, setData] = useState<UserData>(DEFAULT_USER);
+
+  const { setAuthenticated } = useAuth();
+  const showToast = useToast();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setData(null);
-    console.log(name, value);
+    const updated = {
+      ...data,
+      [name]: value,
+    };
+    setData(updated);
   };
 
-  const handleSignUp = () => {
-    alert("sign up");
+  const handleSignUp = async () => {
+    try {
+      const res = await Post(END_POINT.SIGN_UP, {
+        usename: data?.username,
+        email: data?.email,
+        password: data?.password,
+      });
+
+      if (res.status !== 200) {
+        throw new Error("failed");
+      }
+
+      setAuthenticated(data != null);
+      showToast("Success", `Welcome ${data?.username}`, "success");
+    } catch (_) {
+      showToast("Error", "SignUp failed. please try again", "error");
+    }
   };
 
   return (
@@ -25,27 +56,27 @@ export default function SignUp() {
       <div className="h-100 flex justify-center items-start">
         <div className="flex flex-col">
           <Input
+            name="username"
             label="username"
             className="pt-10 text-2xl"
             type="text"
             value={data?.username}
-            placeholder="email"
             onChange={handleChange}
           />
           <Input
+            name="email"
             label="email"
             className="pt-5 text-2xl"
-            type="password"
-            value={data?.password}
-            placeholder="password"
+            type="text"
+            value={data?.email}
             onChange={handleChange}
           />
           <Input
+            name="password"
             label="password"
             className="pt-5 text-2xl"
             type="password"
             value={data?.password}
-            placeholder="password"
             onChange={handleChange}
           />
           <div className="pt-10 flex justify-center">
