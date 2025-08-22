@@ -13,24 +13,24 @@ export default function Toast({ title, message, variant }: ToastProps) {
     Toast({ title, message, variant });
     return;
   }
-  const { setOpen } = context;
 
   const color = () => {
     switch (variant) {
       case "error":
-        return "bg-red-500";
+        return "bg-red-500 text-white absolute top-50 left-50";
       case "success":
-        return "bg-emerald-500";
+        return "bg-emerald-500 absolute top-50 left-50";
       default:
         return "bg-grey-500";
     }
   };
 
   return (
-    <div className={color()}>
-      <div>{title}</div>
-      <div onClick={() => setOpen(false)}> X </div>
-      <div>{message}</div>
+    <div className="static">
+      <div className={color()}>
+        <div>{title}</div>
+        <div>{message}</div>
+      </div>
     </div>
   );
 }

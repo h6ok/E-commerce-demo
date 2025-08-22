@@ -21,7 +21,15 @@ export default function User() {
 
   return (
     <div className="size-full">
-      {isAuthenticated && <div>You are Authenticated</div>}
+      {isAuthenticated && (
+        <div className="h-170 w-full flex flex-col items-center justify-center">
+          <div className="text-4xl flex flex-col items-center justify-center">
+            <div>This is your user page</div>
+            <div className="pt-10">Username</div>
+            <div className="pt-10">Email</div>
+          </div>
+        </div>
+      )}
       {!isAuthenticated && (
         <div className="pt-10">
           <Tab tabs={TABS} />
