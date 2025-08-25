@@ -39,3 +39,33 @@
 .read-the-docs {
   color: #888;
 }
+table {
+  width: 100%;
+  border-collapse: collapse; /* セルの境界線を結合 */
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ヘッダーとセルのスタイル */
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* 行の下にボーダーを追加 */
+}
+
+/* ヘッダーのスタイル */
+thead th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 2px solid #ddd; /* ヘッダーの下を少し太くする */
+}
+
+/* 行にマウスが乗ったときのホバー効果 */
+tbody tr:hover {
+  background-color: #e6e6e6;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
