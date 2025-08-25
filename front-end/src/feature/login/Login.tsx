@@ -51,7 +51,7 @@ export default function Login() {
               className="text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
               onClick={handleLogin}
             >
-              confirm
+              Log in
             </button>
           </div>
         </div>
