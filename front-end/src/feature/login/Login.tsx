@@ -5,23 +5,31 @@ import { Post } from "../../util/Http";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
 
+type UserPayload = {
+  username: string;
+  email: string;
+  token: string;
+};
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setAuthenticated } = useAuth();
+  const { setAuthenticated, setUserId, setUserEmail } = useAuth();
   const showToast = useToast();
 
   async function handleLogin() {
     try {
-      const data = await Post(END_POINT.LOGIN, { id, password });
-      if (data.status !== 200) {
-        throw new Error("failed");
+      const resp = await Post<UserPayload>(END_POINT.LOGIN, { id, password });
+      if (resp.status !== 200) {
+        showToast("Error", resp.error.message, "error");
       }
 
-      setAuthenticated(data != null);
+      setAuthenticated(resp.data != null);
+      setUserId(resp.data.username);
+      setUserEmail(resp.data.email);
       showToast("Success", "You are successfully authenticated", "success");
-    } catch (_) {
+    } catch (err) {
+      console.log(err);
       showToast("Error", "Wrong email or password", "error");
     }
   }

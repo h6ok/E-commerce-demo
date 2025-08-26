@@ -1,4 +1,14 @@
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+
 export default function Notifications() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  if (!isAuthenticated) {
+    navigate("/user");
+    return;
+  }
+
   return (
     <div className="pt-20">
       <div className="w-full flex flex-col">
@@ -7,9 +17,9 @@ export default function Notifications() {
             <table className="scroll-auto">
               <thead>
                 <tr className="h-10">
-                  <th className="w-30 text-center">日付</th>
-                  <th className="w-120 text-center">件名</th>
-                  <th className="w-30 text-center">カテゴリー</th>
+                  <th className="w-30 text-center">Date</th>
+                  <th className="w-120 text-center">Subject</th>
+                  <th className="w-30 text-center">Category</th>
                 </tr>
               </thead>
               <tbody>
