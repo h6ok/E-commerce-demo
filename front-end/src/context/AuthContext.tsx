@@ -1,8 +1,19 @@
 import { createContext, useEffect, useState } from "react";
+import { END_POINT } from "../consts/Const";
+import { Post } from "../util/Http";
+import useToast from "../hooks/useToast";
+
+type UserPayload = {
+  username: string;
+  email: string;
+  token: string;
+};
 
 type AuthState = {
   userId: string;
   setUserId: (userid: string) => void;
+  userEmail: string;
+  setUserEmail: (userEmail: string) => void;
   isAuthenticated: boolean;
   setAuthenticated: (isAuthenticated: boolean) => void;
 };
@@ -10,23 +21,36 @@ const AuthContext = createContext<AuthState | null>(null);
 
 function AuthProvider(props: { children: React.ReactNode }) {
   const [userId, setUserId] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [isAuthenticated, setAuthenticated] = useState(false);
+
+  const showToast = useToast();
 
   const authContext: AuthState = {
     userId,
     setUserId,
+    userEmail,
+    setUserEmail,
     isAuthenticated,
     setAuthenticated,
   };
 
-  useEffect(() => {
+  const verifySession = async () => {
     try {
-      setAuthenticated(false);
-      setUserId("developer");
-    } catch (err) {
-      console.log(err);
+      const resp = await Post<UserPayload>(END_POINT.LOGIN, {});
+      if (resp.status === 200) {
+        setUserId(resp.data.username);
+        setUserEmail(resp.data.email);
+        setAuthenticated(true);
+      }
+    } catch (_) {
+      showToast("Error", "Unknown error has occurred", "error");
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    verifySession();
+  });
 
   return (
     <AuthContext.Provider value={authContext}>

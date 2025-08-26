@@ -1,11 +1,18 @@
-type Response = {
-  data: object;
-  error: object;
+type Response<T> = {
+  data: T;
+  error: Error;
   status: number;
   timestamp: string;
 };
 
-async function Post(endPoint: string, payload: object): Promise<Response> {
+type Error = {
+  message: string;
+};
+
+async function Post<T>(
+  endPoint: string,
+  payload: object,
+): Promise<Response<T>> {
   const headers = {
     "Content-type": "application/json",
   };
