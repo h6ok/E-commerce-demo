@@ -22,6 +22,7 @@ export default function Login() {
       const resp = await Post<UserPayload>(END_POINT.LOGIN, { id, password });
       if (resp.status !== 200) {
         showToast("Error", resp.error.message, "error");
+        return;
       }
 
       setAuthenticated(resp.data != null);

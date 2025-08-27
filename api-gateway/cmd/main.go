@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-gateway/cache"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -12,15 +13,21 @@ import (
 	"github.com/h6ok/response"
 )
 
-type Response struct {
+type Response[T any] struct {
 	Status    int          `json:"status"`
-	Data      any          `json:"data"`
+	Data      T            `json:"data"`
 	Error     ErroResponse `json:"error"`
 	Timestamp time.Time    `json:"timestamp"`
 }
 
 type ErroResponse struct {
 	Message string `json:"message"`
+}
+
+type UserData struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Info     string `json:"info"`
 }
 
 func main() {
@@ -38,13 +45,93 @@ func main() {
 
 func Authenticate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		Post(w, r, "http://auth-service:8080/authenticate")
+		if r.Method == "OPTION" {
+			response.Success(w).CORS().Return()
+			return
+		}
+
+		cookie, _ := r.Cookie("e-commerce-demo")
+		if info, ok := cache.Get(cookie.Value); ok {
+			data := UserData{
+				Username: info.Username,
+				Email:    info.Email,
+				Info:     "cache used",
+			}
+			response.Success(w).
+				CORS().
+				Json().
+				SetBody(data).
+				Return()
+			return
+		}
+
+		resp, err := Post[cache.UserCache](w, r, "http://auth-service:8080/authenticate")
+		if err != nil {
+			response.BadRequest(w).
+				Json().
+				SetError(err).
+				CORS().
+				Return()
+			return
+		}
+
+		cache.Add(resp.Data.Username, resp.Data)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "e-commerce-demo",
+			Value:    resp.Data.Username,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   false,
+		})
+
+		response.Status(w, resp.Status).
+			CORS().
+			Json().
+			SetBody(resp.Data).
+			SetError(fmt.Errorf(resp.Error.Message)).
+			Return()
 	}
 }
 
 func SignUp() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		Post(w, r, "http://auth-service:8080/sign-up")
+		if r.Method == "OPTION" {
+			response.Success(w).CORS().Return()
+			return
+		}
+
+		resp, err := Post[cache.UserCache](w, r, "http://auth-service:8080/sign-up")
+		if err != nil {
+			response.BadRequest(w).
+				Json().
+				SetError(err).
+				CORS().
+				Return()
+			return
+		}
+
+		cache.Add(resp.Data.Username, resp.Data)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "e-commerce-demo",
+			Value:    resp.Data.Username,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   false,
+		})
+
+		data := UserData{
+			Username: resp.Data.Username,
+			Email:    resp.Data.Email,
+		}
+		response.Status(w, resp.Status).
+			CORS().
+			Json().
+			SetBody(data).
+			SetError(fmt.Errorf(resp.Error.Message)).
+			Return()
+
 	}
 }
 
@@ -62,65 +149,34 @@ func Ping() http.HandlerFunc {
 	}
 }
 
-func Post(w http.ResponseWriter, r *http.Request, url string) {
-	if r.Method == "OPTION" {
-		response.Success(w).CORS().Return()
-		return
-	}
-
+func Post[T any](w http.ResponseWriter, r *http.Request, url string) (Response[T], error) {
 	client := &http.Client{}
 
 	rBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		response.BadRequest(w).CORS().Json().SetError(err).Return()
-		return
+		return Response[T]{}, fmt.Errorf("cannot read body from request")
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(rBody))
 	if err != nil {
-		response.BadRequest(w).
-			CORS().
-			Json().
-			SetError(err).
-			Return()
-		return
+		return Response[T]{}, fmt.Errorf("cannot make request for service")
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		response.BadRequest(w).
-			CORS().
-			Json().
-			SetError(err).
-			Return()
-		return
+		return Response[T]{}, fmt.Errorf("cannot connect to service")
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		response.BadRequest(w).
-			CORS().
-			Json().
-			SetError(fmt.Errorf("cannot read resposne from auth service")).
-			Return()
-		return
+		return Response[T]{}, fmt.Errorf("cannnot read response from service")
 	}
 
-	var obj Response
+	var obj Response[T]
 	err = json.Unmarshal(data, &obj)
 	if err != nil {
-		response.BadRequest(w).
-			CORS().
-			Json().
-			SetError(err).
-			Return()
-		return
+		return Response[T]{}, fmt.Errorf("cannot format response from service to json")
 	}
 
-	response.Status(w, obj.Status).
-		CORS().
-		Json().
-		SetBody(obj.Data).
-		SetError(fmt.Errorf(obj.Error.Message)).
-		Return()
+	return obj, nil
 }

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"authentication/cache"
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -50,18 +48,6 @@ const LOG_IN string = `
 func Authenticate(server *AuthServer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		cookie, _ := r.Cookie("e-commerce-demo")
-		if info, ok := cache.Get(cookie.Value); ok {
-			data := struct {
-				Username string `json:"username"`
-				Email    string `json:"email"`
-			}{
-				Username: info.Username,
-				Email:    info.Email,
-			}
-			response.Success(w).Json().SetBody(data).Return()
-		}
-
 		if r.Method == "OPTION" {
 			response.Success(w).Return()
 			return
@@ -101,19 +87,14 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			return
 		}
 
-		sessionId := fmt.Sprintf(user.Username, time.Now().String())
-		cache.Add(sessionId, cache.UserCache{
-			Username: user.Username,
-			Email:    user.Email,
-			Token:    token,
-		})
-
 		data := struct {
 			Username string `json:"username"`
 			Email    string `json:"email"`
+			Token    string `json:"token"`
 		}{
 			Username: user.Username,
 			Email:    user.Email,
+			Token:    token,
 		}
 
 		event := AuthEvent{
@@ -124,14 +105,6 @@ func Authenticate(server *AuthServer) http.HandlerFunc {
 			Timestamp: time.Now(),
 		}
 		go server.Producer.PublishAuthEvent(event)
-
-		http.SetCookie(w, &http.Cookie{
-			Name:     "e-commerce-demo",
-			Value:    sessionId,
-			Path:     "/",
-			HttpOnly: true,
-			Secure:   false,
-		})
 		response.Success(w).Json().SetBody(data).Return()
 	}
 }
@@ -172,18 +145,14 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			return
 		}
 
-		sessionId := fmt.Sprintf(payload.Username, time.Now().String())
-		cache.Add(sessionId, cache.UserCache{
-			Username: payload.Username,
-			Email:    payload.Email,
-			Token:    token,
-		})
 		message := struct {
 			Username string `json:"username"`
 			Email    string `json:"email"`
+			Token    string `json:"token"`
 		}{
 			Username: payload.Username,
 			Email:    payload.Email,
+			Token:    token,
 		}
 
 		event := SignUpEvent{
@@ -192,14 +161,6 @@ func SignUp(server *AuthServer) http.HandlerFunc {
 			Email:    payload.Email,
 		}
 		go server.Producer.PublishSignUpEvent(event)
-
-		http.SetCookie(w, &http.Cookie{
-			Name:     "e-commerce-demo",
-			Value:    sessionId,
-			Path:     "/",
-			HttpOnly: true,
-			Secure:   false,
-		})
 		response.Success(w).Json().SetBody(message).Return()
 	}
 }
