@@ -1,9 +1,9 @@
 package cache
 
 type UserCache struct {
-	Username string
-	Email    string
-	Token    string
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Token    string `json:"token"`
 }
 
 var SessionPool = make(map[string]UserCache)
