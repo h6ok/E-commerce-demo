@@ -46,23 +46,27 @@ func main() {
 func Authenticate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTION" {
-			response.Success(w).CORS().Return()
+			r := response.Success(w).CORS()
+			r.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
+			r.Return()
 			return
 		}
 
-		cookie, _ := r.Cookie("e-commerce-demo")
-		if info, ok := cache.Get(cookie.Value); ok {
-			data := UserData{
-				Username: info.Username,
-				Email:    info.Email,
-				Info:     "cache used",
+		cookie, err := r.Cookie("e-commerce-demo")
+		if err == nil {
+			if info, ok := cache.Get(cookie.Value); ok {
+				data := UserData{
+					Username: info.Username,
+					Email:    info.Email,
+					Info:     "cache used",
+				}
+				response.Success(w).
+					CORS().
+					Json().
+					SetBody(data).
+					Return()
+				return
 			}
-			response.Success(w).
-				CORS().
-				Json().
-				SetBody(data).
-				Return()
-			return
 		}
 
 		resp, err := Post[cache.UserCache](w, r, "http://auth-service:8080/authenticate")
@@ -85,19 +89,23 @@ func Authenticate() http.HandlerFunc {
 			Secure:   false,
 		})
 
-		response.Status(w, resp.Status).
+		res := response.Status(w, resp.Status).
 			CORS().
 			Json().
 			SetBody(resp.Data).
-			SetError(fmt.Errorf(resp.Error.Message)).
-			Return()
+			SetError(fmt.Errorf(resp.Error.Message))
+
+		res.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
+		res.Return()
 	}
 }
 
 func SignUp() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTION" {
-			response.Success(w).CORS().Return()
+			r := response.Success(w).CORS()
+			r.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
+			r.Return()
 			return
 		}
 
@@ -125,12 +133,15 @@ func SignUp() http.HandlerFunc {
 			Username: resp.Data.Username,
 			Email:    resp.Data.Email,
 		}
-		response.Status(w, resp.Status).
+
+		res := response.Status(w, resp.Status).
 			CORS().
 			Json().
 			SetBody(data).
-			SetError(fmt.Errorf(resp.Error.Message)).
-			Return()
+			SetError(fmt.Errorf(resp.Error.Message))
+
+		res.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
+		res.Return()
 
 	}
 }
