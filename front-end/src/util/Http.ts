@@ -21,6 +21,7 @@ async function Post<T>(
   const requestOptions = {
     method: "POST",
     headers,
+    credentials: "include" as RequestCredentials,
     body,
   };
   const res = await fetch(endPoint, requestOptions);
