@@ -8,6 +8,7 @@ import Women from "./feature/women/Women";
 import Kids from "./feature/kids/Kids";
 import Notifications from "./feature/notifications/Notifications";
 import User from "./feature/user/User";
+import Cart from "./feature/cart/Cart";
 import { ToastProvider } from "./context/ToastContext";
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/user" element={<User />} />
-              <Route path="/cart" element={<div>cart</div>} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="/men" element={<Men />} />
               <Route path="/women" element={<Women />} />
               <Route path="/kids" element={<Kids />} />

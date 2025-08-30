@@ -5,12 +5,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/h6ok/response"
 	"io"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/h6ok/response"
 )
 
 type Response[T any] struct {
@@ -37,7 +36,11 @@ func main() {
 	mux.HandleFunc("/ping", Ping())
 	// mux.HandleFunc("/handle", Handler())
 
-	err := http.ListenAndServe(":8081", mux)
+	router := CreateMiddleware(
+		EnableCORS,
+	)(mux)
+
+	err := http.ListenAndServe(":8081", router)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -46,14 +49,13 @@ func main() {
 func Authenticate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTION" {
-			r := response.Success(w).CORS()
-			r.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
-			r.Return()
+			response.Success(w).
+				Return()
 			return
 		}
 
 		cookie, err := r.Cookie("e-commerce-demo")
-		if err == nil {
+		if err == nil && cookie.Value != "" {
 			if info, ok := cache.Get(cookie.Value); ok {
 				data := UserData{
 					Username: info.Username,
@@ -61,7 +63,6 @@ func Authenticate() http.HandlerFunc {
 					Info:     "cache used",
 				}
 				response.Success(w).
-					CORS().
 					Json().
 					SetBody(data).
 					Return()
@@ -74,7 +75,6 @@ func Authenticate() http.HandlerFunc {
 			response.BadRequest(w).
 				Json().
 				SetError(err).
-				CORS().
 				Return()
 			return
 		}
@@ -89,22 +89,18 @@ func Authenticate() http.HandlerFunc {
 			Secure:   false,
 		})
 
-		res := response.Status(w, resp.Status).
-			CORS().
+		response.Status(w, resp.Status).
 			Json().
 			SetBody(resp.Data).
-			SetError(fmt.Errorf(resp.Error.Message))
-
-		res.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
-		res.Return()
+			SetError(fmt.Errorf(resp.Error.Message)).
+			Return()
 	}
 }
 
 func SignUp() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTION" {
-			r := response.Success(w).CORS()
-			r.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
+			r := response.Success(w)
 			r.Return()
 			return
 		}
@@ -114,7 +110,6 @@ func SignUp() http.HandlerFunc {
 			response.BadRequest(w).
 				Json().
 				SetError(err).
-				CORS().
 				Return()
 			return
 		}
@@ -134,14 +129,11 @@ func SignUp() http.HandlerFunc {
 			Email:    resp.Data.Email,
 		}
 
-		res := response.Status(w, resp.Status).
-			CORS().
+		response.Status(w, resp.Status).
 			Json().
 			SetBody(data).
-			SetError(fmt.Errorf(resp.Error.Message))
-
-		res.SetHeader("Access-Control-Allow-Origin", "http://localhost:5173")
-		res.Return()
+			SetError(fmt.Errorf(resp.Error.Message)).
+			Return()
 
 	}
 }
