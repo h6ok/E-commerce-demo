@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
-	"net/http"
-	"time"
-
 	"github.com/h6ok/response"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
+	"time"
 )
 
 type user struct {

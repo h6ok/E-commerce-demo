@@ -19,6 +19,8 @@ github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+
 github.com/gorilla/sessions v1.2.1/go.mod h1:dk2InVEVJ0sfLlnXv9EAgkf6ecYs/i80K/zI+bUmuGM=
 github.com/h6ok/response v0.0.5 h1:8ofIeDZj66z/qF7NuX/LNdIjJ1ygWcIeT0jcJRFHV4I=
 github.com/h6ok/response v0.0.5/go.mod h1:0zjymUOGNbzyxDx0XdkNaGHPwR+GIUWbSCtXrTQtRmE=
+github.com/h6ok/response v0.0.9 h1:8UkbqA210sSIOrVVHXE3qyLkeG32M4lscO6xVKwxwwA=
+github.com/h6ok/response v0.0.9/go.mod h1:6X7CGeuNayILuEGVlmpAUI7wmkccv4oNVnFz5hfD7Ho=
 github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+lD48awMYo=
