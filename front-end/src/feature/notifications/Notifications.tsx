@@ -10,9 +10,14 @@ export default function Notifications() {
   }
 
   return (
-    <div className="pt-20">
+    <div>
       <div className="w-full flex flex-col">
-        <div className="h-150 flex justify-center items-start">
+        <div className="w-full text-4xl pt-10">
+          <div className="flex items-center justify-center">
+            <div className="border-b-4 border-double">Notifications</div>
+          </div>
+        </div>
+        <div className="pt-20 h-150 flex justify-center items-start">
           <div className="shadow-md">
             <table className="scroll-auto">
               <thead>

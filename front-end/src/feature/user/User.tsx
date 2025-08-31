@@ -22,11 +22,11 @@ export default function User() {
   return (
     <div className="size-full">
       {isAuthenticated && (
-        <div className="h-170 w-full flex flex-col items-center">
-          <div className="text-4xl flex flex-col items-center justify-center pt-30">
-            <div>This is your user page</div>
+        <div className="h-160 w-full flex flex-col items-center">
+          <div className="text-4xl flex flex-col items-center justify-center pt-10">
+            <div className="border-b-4 border-double">User Information</div>
             <div className="flex flex-col justify-center">
-              <div className="flex pt-30">
+              <div className="flex pt-20">
                 <div className="text-end w-1/2">Username</div>
                 <div className="pl-10 justify-baseline w-1/2">{userId}</div>
               </div>
