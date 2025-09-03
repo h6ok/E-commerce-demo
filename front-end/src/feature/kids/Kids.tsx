@@ -1,11 +1,19 @@
-import Banner from "../../components/Banner";
-import KidsBanner from "./../../assets/Kids.png";
+import Slide from "../../components/Slide";
+import type { SlideProps } from "../../components/Slide";
+import type { ProductImgProps } from "../../components/ProductImg";
+import { KIDS_PRODUCT } from "../../consts/Products";
 
 export default function Kids() {
+  const childProps = {
+    content: KIDS_PRODUCT,
+    title: "Kids",
+  } as SlideProps<ProductImgProps>;
+
   return (
-    <>
-      <Banner path={KidsBanner} alt="kids banner image" />
-      <div>this is kids page</div>
-    </>
+    <div className="w-full flex-col items-center">
+      <div>
+        <Slide {...childProps} />
+      </div>
+    </div>
   );
 }
