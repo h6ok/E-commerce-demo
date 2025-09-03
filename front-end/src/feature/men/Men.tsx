@@ -1,11 +1,18 @@
-import Banner from "../../components/Banner";
-import MensBanner from "./../../assets/Men.png";
+import type { ProductImgProps } from "../../components/ProductImg";
+import Slide from "../../components/Slide";
+import type { SlideProps } from "../../components/Slide";
+import { MENS_PRODUCT } from "../../consts/Products";
 
 export default function Men() {
+  const childProps = {
+    content: MENS_PRODUCT,
+    title: "Men",
+  } as SlideProps<ProductImgProps>;
   return (
-    <>
-      <Banner path={MensBanner} alt="men banner image" />
-      <div>this is mens page</div>
-    </>
+    <div className="w-full flex-col items-center">
+      <div>
+        <Slide {...childProps} />
+      </div>
+    </div>
   );
 }
