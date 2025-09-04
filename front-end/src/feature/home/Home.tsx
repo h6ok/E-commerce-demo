@@ -6,16 +6,35 @@ import type { SlideProps } from "../../components/Slide";
 import type { ProductImgProps } from "../../components/ProductImg";
 
 export default function Home() {
-  const childProps = {
-    content: PRODUCTS,
+  const mensProducts = {
+    content: PRODUCTS.filter((p) => p.category === "men"),
     title: "Product",
+    displayCategory: true,
+    linkTo: "men",
+    linkLabel: "see more men's items...",
+  } as SlideProps<ProductImgProps>;
+
+  const womensProducts = {
+    content: PRODUCTS.filter((p) => p.category === "women"),
+    displayCategory: true,
+    linkTo: "women",
+    linkLabel: "see more women's items...",
+  } as SlideProps<ProductImgProps>;
+
+  const kidsProducts = {
+    content: PRODUCTS.filter((p) => p.category === "kids"),
+    displayCategory: true,
+    linkTo: "kids",
+    linkLabel: "see more kids items...",
   } as SlideProps<ProductImgProps>;
 
   return (
     <div className="w-full flex-col items-center">
       <Banner path={HomeBanner} alt="home banner image" />
       <div className="pt-20">
-        <Slide {...childProps} />
+        <Slide {...mensProducts} />
+        <Slide {...womensProducts} />
+        <Slide {...kidsProducts} />
       </div>
     </div>
   );
