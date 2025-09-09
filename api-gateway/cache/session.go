@@ -16,3 +16,7 @@ func Get(sessionId string) (UserCache, bool) {
 	info, ok := SessionPool[sessionId]
 	return info, ok
 }
+
+func Delete(sessionId string) {
+	delete(SessionPool, sessionId)
+}

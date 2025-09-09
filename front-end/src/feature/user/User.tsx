@@ -2,9 +2,11 @@ import useAuth from "../../hooks/useAuth";
 import Tab from "../../components/Tab";
 import Login from "../login/Login";
 import SignUp from "../signUp/SignUp";
+import { Post } from "../../util/Http";
+import { END_POINT } from "../../consts/Const";
 
 export default function User() {
-  const { isAuthenticated, userId, userEmail } = useAuth();
+  const { isAuthenticated, userId, userEmail, setAuthenticated } = useAuth();
 
   const TABS = [
     {
@@ -18,6 +20,13 @@ export default function User() {
       component: <SignUp />,
     },
   ];
+
+  const logOut = async () => {
+    const res = await Post(END_POINT.LOG_OUT, {});
+    if (res.status === 200) {
+      setAuthenticated(false);
+    }
+  };
 
   return (
     <div className="size-full">
@@ -38,7 +47,7 @@ export default function User() {
             <div className="pt-20 text-lg flex justify-center">
               <button
                 className="text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
-                onClick={() => console.log("log out")}
+                onClick={logOut}
               >
                 Log Out
               </button>
