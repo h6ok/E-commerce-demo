@@ -20,7 +20,6 @@ type AuthState = {
 const AuthContext = createContext<AuthState | null>(null);
 
 function AuthProvider(props: { children: React.ReactNode }) {
-  const [viewed, setViewed] = useState(false);
   const [userId, setUserId] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [isAuthenticated, setAuthenticated] = useState(false);
@@ -46,6 +45,10 @@ function AuthProvider(props: { children: React.ReactNode }) {
         setUserId(resp.data.username);
         setUserEmail(resp.data.email);
         setAuthenticated(true);
+      } else {
+        setUserId("");
+        setUserEmail("");
+        setAuthenticated(false);
       }
     } catch (_) {
       showToast("Error", "Unknown error has occurred", "error");
@@ -53,11 +56,14 @@ function AuthProvider(props: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    if (!viewed) {
+    verifySession();
+  });
+
+  useEffect(() => {
+    if (!isAuthenticated) {
       verifySession();
     }
-    setViewed(true);
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <AuthContext.Provider value={authContext}>
