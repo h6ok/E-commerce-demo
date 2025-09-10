@@ -15,7 +15,6 @@ export default function useToast() {
     setMessage(message);
     setVariant(variant);
     setOpen(true);
-    console.log("showToast");
     setTimeout(() => {
       setOpen(false);
     }, 3000);

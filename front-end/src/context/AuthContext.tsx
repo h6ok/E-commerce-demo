@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { END_POINT } from "../consts/Const";
 import { Post } from "../util/Http";
-import useToast from "../hooks/useToast";
 
 type UserPayload = {
   username: string;
@@ -23,8 +22,6 @@ function AuthProvider(props: { children: React.ReactNode }) {
   const [userId, setUserId] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [isAuthenticated, setAuthenticated] = useState(false);
-
-  const showToast = useToast();
 
   const authContext: AuthState = {
     userId,
@@ -50,8 +47,8 @@ function AuthProvider(props: { children: React.ReactNode }) {
         setUserEmail("");
         setAuthenticated(false);
       }
-    } catch (_) {
-      showToast("Error", "Unknown error has occurred", "error");
+    } catch (err) {
+      console.log("error", err);
     }
   };
 

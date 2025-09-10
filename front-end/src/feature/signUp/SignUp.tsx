@@ -35,7 +35,7 @@ export default function SignUp() {
   const handleSignUp = async () => {
     try {
       const res = await Post(END_POINT.SIGN_UP, {
-        usename: data?.username,
+        username: data?.username,
         email: data?.email,
         password: data?.password,
       });
@@ -47,7 +47,7 @@ export default function SignUp() {
       setAuthenticated(data != null);
       showToast("Success", `Welcome ${data?.username}`, "success");
     } catch (_) {
-      showToast("Error", "SignUp failed. please try again", "error");
+      showToast("Error", "SignUp failed", "error");
     }
   };
 
