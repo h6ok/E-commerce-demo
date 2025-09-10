@@ -1,7 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { useEffect } from "react";
 
-export default function Notifications() {
+export type Notification = {
+  date: string;
+  subject: string;
+  category: string;
+};
+
+export function Notifications() {
+  useEffect(() => {
+    window.scrollTo({ left: 0, top: 0 });
+  });
+
+  const datas: Notification[] = [
+    {
+      date: "2025/01/01",
+      subject: "New Arrivals",
+      category: "Products",
+    },
+  ];
+
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   if (!isAuthenticated) {
@@ -28,16 +47,13 @@ export default function Notifications() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="h-10">
-                  <td className="text-center">aa</td>
-                  <td className="text-center">bb</td>
-                  <td className="text-center">cc</td>
-                </tr>
-                <tr className="h-10">
-                  <td className="text-center">aa</td>
-                  <td className="text-center">bb</td>
-                  <td className="text-center">cc</td>
-                </tr>
+                {datas.map((data) => (
+                  <tr className="h-10">
+                    <td className="text-center">{data.date}</td>
+                    <td className="text-center">{data.subject}</td>
+                    <td className="text-center">{data.category}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

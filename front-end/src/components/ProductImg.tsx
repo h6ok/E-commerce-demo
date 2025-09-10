@@ -3,6 +3,7 @@ import ProductIcon from "../assets/product.png";
 import ProductDialog from "./ProductDialog";
 
 export type ProductImgProps = {
+  id: number;
   name: string;
   price: number;
   category: string;

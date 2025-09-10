@@ -4,8 +4,13 @@ import { PRODUCTS } from "../../consts/Products";
 import Slide from "../../components/Slide";
 import type { SlideProps } from "../../components/Slide";
 import type { ProductImgProps } from "../../components/ProductImg";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    window.scrollTo({ left: 0, top: 0 });
+  });
+
   const mensProducts = {
     content: PRODUCTS.filter((p) => p.category === "men"),
     title: "Product",

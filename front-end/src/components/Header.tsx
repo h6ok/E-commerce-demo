@@ -49,7 +49,7 @@ export default function Header() {
 
   return (
     <div className="z-100 sticky top-0 overflow-hidden h-30 bg-white flex font-sans text-2xl text-black">
-      <HeaderElement path="/home" width="2" children={<Logo />} />
+      <HeaderElement path="/" width="2" children={<Logo />} />
       <HeaderElement label="Men" path="/men" width="1" />
       <HeaderElement label="Women" path="/women" width="1" />
       <HeaderElement label="Kids" path="/kids" width="1" />

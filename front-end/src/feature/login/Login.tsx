@@ -28,7 +28,7 @@ export default function Login() {
       setAuthenticated(resp.data != null);
       setUserId(resp.data.username);
       setUserEmail(resp.data.email);
-      showToast("Success", "You are successfully authenticated", "success");
+      showToast("Success", "You are authenticated", "success");
     } catch (err) {
       console.log(err);
       showToast("Error", "Wrong email or password", "error");

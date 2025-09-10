@@ -17,19 +17,21 @@ export default function Toast({ title, message, variant }: ToastProps) {
   const color = () => {
     switch (variant) {
       case "error":
-        return "bg-red-500 text-white absolute top-50 left-50";
+        return "bg-red-500 rounded w-70 text-white absolute top-50 left-20";
       case "success":
-        return "bg-emerald-500 absolute top-50 left-50";
+        return "bg-emerald-500 rounded w-70 absolute top-50 left-20";
       default:
         return "bg-grey-500";
     }
   };
 
   return (
-    <div className="static">
+    <div className="fixed">
       <div className={color()}>
-        <div>{title}</div>
-        <div>{message}</div>
+        <div className="p-5 flex flex-col items-center justify-center">
+          <div className="text-2xl mb-5">{title}</div>
+          <div className="text-xl">{message}</div>
+        </div>
       </div>
     </div>
   );

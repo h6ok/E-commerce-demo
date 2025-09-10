@@ -2,6 +2,9 @@ import { useState } from "react";
 import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 import ProductImg from "./ProductImg";
 import type { ProductImgProps } from "./ProductImg";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import useRootState from "../hooks/useState";
 
 type ProductDialogProps = {
   product: ProductImgProps;
@@ -19,6 +22,9 @@ export default function ProductDialog({
   onClose,
 }: ProductDialogProps) {
   const [quantity, setQuantity] = useState(0);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const { cartItems, setCartItems } = useRootState();
 
   const addCount = () => {
     const count = quantity;
@@ -32,11 +38,22 @@ export default function ProductDialog({
   };
 
   const handleClose = () => {
+    if (!onClose) return;
     onClose(false);
   };
 
-  const stopPropagation = (e: MouseEvent) => {
-    e.stopPropagation();
+  const toSignUp = () => {
+    navigate("/user");
+  };
+
+  const addCart = () => {
+    const item = {
+      id: "0",
+      name: product.name,
+      unitPrice: product.price,
+      quantity: quantity,
+    };
+    setCartItems([...cartItems, item]);
   };
 
   return (
@@ -48,7 +65,7 @@ export default function ProductDialog({
         >
           <div className="mt-20 h-150 w-200">
             <div
-              onClick={stopPropagation}
+              onClick={(e) => e.stopPropagation()}
               className="z-200 opacity-100 rounded-2xl bg-white"
             >
               <div className="h-20 text-center border-b-gray-200 border-b-2 text-4xl">
@@ -60,21 +77,37 @@ export default function ProductDialog({
               </div>
               <p>{note}</p>
               <div className="flex items-center justify-center mt-5 pb-5">
-                <div className="scale-200" onClick={subCount}>
-                  <FiMinusCircle />
-                </div>
-                <div className="text-4xl font-bold pl-20 pr-20">{quantity}</div>
-                <div className="scale-200" onClick={addCount}>
-                  <FiPlusCircle />
-                </div>
+                {isAuthenticated && (
+                  <>
+                    <div className="scale-200" onClick={subCount}>
+                      <FiMinusCircle />
+                    </div>
+                    <div className="text-4xl font-bold pl-20 pr-20">
+                      {quantity}
+                    </div>
+                    <div className="scale-200" onClick={addCount}>
+                      <FiPlusCircle />
+                    </div>
+                  </>
+                )}
               </div>
               <div className="flex items-center justify-center">
-                <button
-                  className="mb-5 text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
-                  onClick={onClick}
-                >
-                  Add Cart
-                </button>
+                {isAuthenticated && (
+                  <button
+                    className="mb-5 text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
+                    onClick={addCart}
+                  >
+                    Add Cart
+                  </button>
+                )}
+                {!isAuthenticated && (
+                  <button
+                    className="mb-5 text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
+                    onClick={toSignUp}
+                  >
+                    Sign Up To Purchase
+                  </button>
+                )}
               </div>
             </div>
           </div>
