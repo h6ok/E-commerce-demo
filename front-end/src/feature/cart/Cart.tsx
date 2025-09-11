@@ -4,7 +4,6 @@ import { CartItem } from "./CartItem";
 import useRootState from "../../hooks/useState";
 
 type CartInfo = {
-  totalAmount: number;
   items: CartItemProps[];
 };
 
@@ -15,9 +14,12 @@ export default function Cart() {
 
   const { cartItems, setCartItems } = useRootState();
   const info: CartInfo = {
-    totalAmount: 10000,
     items: cartItems,
   };
+
+  const totalAmount = cartItems.reduce((acc, cur) => {
+    return acc + cur.unitPrice * cur.quantity;
+  }, 0);
 
   const handleDelete = (id: string) => {
     const filtered = cartItems.filter((item) => item.id !== id);
@@ -30,20 +32,26 @@ export default function Cart() {
         <div className="flex items-center justify-center w-full text-4xl pt-10">
           <div className="border-b-4 border-double">Cart Items</div>
         </div>
-        <div className="items-center justify-center pt-20">
+        <div className="min-h-50 items-center justify-center pt-20">
           {info.items.map((item) => (
             <CartItem {...item} onDelete={handleDelete} />
           ))}
         </div>
-        <div className="text-center text-2xl pt-5">{`total amount: ${info.totalAmount}`}</div>
-        <div className="pt-10 pb-20 flex justify-center">
-          <button
-            className="text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
-            onClick={() => console.log("check in")}
-          >
-            Purchase
-          </button>
-        </div>
+        {info.items.length > 0 ? (
+          <>
+            <div className="text-center text-2xl pt-5">{`total amount: ${totalAmount}`}</div>
+            <div className="pt-10 pb-20 flex justify-center">
+              <button
+                className="text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
+                onClick={() => console.log("check in")}
+              >
+                Purchase
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-2xl pt-5 pb-70"> No Items </div>
+        )}
       </div>
     </div>
   );

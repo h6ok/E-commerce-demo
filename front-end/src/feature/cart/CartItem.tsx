@@ -32,8 +32,13 @@ export function CartItem({
         <p className="border-b-black pt-5">{`unit price: ${unitPrice}`}</p>
         <p className="border-b-black pt-5">{`quantity: ${quantity}`}</p>
       </div>
-      <div onClick={handleDelete}>
-        <MdDeleteForever />
+      <div className="ml-5 w-15 flex items-center justify-center">
+        <div
+          className="text-4xl transition hover:-translate-y-1 cursor-pointer"
+          onClick={handleDelete}
+        >
+          <MdDeleteForever />
+        </div>
       </div>
     </div>
   );

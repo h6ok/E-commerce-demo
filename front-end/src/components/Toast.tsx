@@ -26,7 +26,7 @@ export default function Toast({ title, message, variant }: ToastProps) {
   };
 
   return (
-    <div className="fixed">
+    <div className="fixed z-500">
       <div className={color()}>
         <div className="p-5 flex flex-col items-center justify-center">
           <div className="text-2xl mb-5">{title}</div>
