@@ -5,6 +5,7 @@ import type { ProductImgProps } from "./ProductImg";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import useRootState from "../hooks/useState";
+import useToast from "../hooks/useToast";
 
 type ProductDialogProps = {
   product: ProductImgProps;
@@ -18,13 +19,13 @@ export default function ProductDialog({
   product,
   note,
   open,
-  onClick,
   onClose,
 }: ProductDialogProps) {
   const [quantity, setQuantity] = useState(0);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { cartItems, setCartItems } = useRootState();
+  const showToast = useToast();
 
   const addCount = () => {
     const count = quantity;
@@ -48,12 +49,21 @@ export default function ProductDialog({
 
   const addCart = () => {
     const item = {
-      id: "0",
+      id: product.id,
       name: product.name,
       unitPrice: product.price,
       quantity: quantity,
     };
     setCartItems([...cartItems, item]);
+    onClose(false);
+    showToast("Done", "Check your cart items", "success");
+  };
+
+  const buttonClass = () => {
+    if (quantity > 0) {
+      return "mb-5 text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white";
+    }
+    return "mb-5 text-lg bg-gray-400 text-black";
   };
 
   return (
@@ -94,8 +104,9 @@ export default function ProductDialog({
               <div className="flex items-center justify-center">
                 {isAuthenticated && (
                   <button
-                    className="mb-5 text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
+                    className={buttonClass()}
                     onClick={addCart}
+                    disabled={quantity === 0}
                   >
                     Add Cart
                   </button>
