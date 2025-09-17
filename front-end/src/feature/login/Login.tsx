@@ -4,6 +4,7 @@ import { END_POINT } from "../../consts/Const";
 import { Post } from "../../util/Http";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
+import useRootState from "../../hooks/useState";
 
 type UserPayload = {
   username: string;
@@ -15,6 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const { setAuthenticated, setUserId, setUserEmail } = useAuth();
+  const { setSocket } = useRootState();
   const showToast = useToast();
 
   async function handleLogin() {
@@ -29,10 +31,16 @@ export default function Login() {
       setUserId(resp.data.username);
       setUserEmail(resp.data.email);
       showToast("Success", "You are authenticated", "success");
+      connectWebSocket();
     } catch (err) {
       console.log(err);
       showToast("Error", "Wrong email or password", "error");
     }
+  }
+
+  function connectWebSocket() {
+    const ws = new WebSocket("ws://localhost:8082/ws");
+    setSocket(ws);
   }
 
   return (

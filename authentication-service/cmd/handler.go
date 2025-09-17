@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/h6ok/response"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
