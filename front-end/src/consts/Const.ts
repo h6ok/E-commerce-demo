@@ -5,6 +5,7 @@ const END_POINT = {
   SIGN_UP: `${HOST}/sign-up`,
   LOG_OUT: `${HOST}/log-out`,
   PRODUCT: `${HOST}/products`,
+  PURCHASE: `${HOST}/purchase`,
 };
 
 export { END_POINT };

@@ -4,6 +4,7 @@ import { Post } from "../../util/Http";
 import { END_POINT } from "../../consts/Const";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
+import useRootState from "../../hooks/useState";
 
 type UserData = {
   username: string;
@@ -21,6 +22,7 @@ export default function SignUp() {
   const [data, setData] = useState<UserData>(DEFAULT_USER);
 
   const { setAuthenticated } = useAuth();
+  const { setSocket } = useRootState();
   const showToast = useToast();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,10 +48,16 @@ export default function SignUp() {
 
       setAuthenticated(data != null);
       showToast("Success", `Welcome ${data?.username}`, "success");
+      connectWebSocket();
     } catch (_) {
       showToast("Error", "SignUp failed", "error");
     }
   };
+
+  function connectWebSocket() {
+    const ws = new WebSocket("ws://localhost:8082/ws");
+    setSocket(ws);
+  }
 
   return (
     <div className="w-full flex flex-col">

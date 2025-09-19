@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thank you for your order!</title>
+  </head>
+  <body>
+    <div
+      style="
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      "
+    >
+      <div style="text-align: center; margin-bottom: 20px">
+        <h1 style="color: #333">Thank you for your order!</h1>
+      </div>
+
+      <p style="font-size: 16px; color: #555">{{.Username}}</p>
+
+      <p style="font-size: 16px; color: #555">
+        Thank you for your recent purchase.<br />
+        We've included the details of your order below.
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px">
+        <thead>
+          <tr style="background-color: #f2f2f2">
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: left">
+              Product Name
+            </th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: left">
+              Price
+            </th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: left">
+              Quantity
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd">
+              [Product Name]
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd">[Price]</td>
+            <td style="padding: 10px; border: 1px solid #ddd">[Quantity]</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td
+              colspan="2"
+              style="
+                text-align: right;
+                padding: 10px;
+                font-weight: bold;
+                border-top: 2px solid #333;
+              "
+            >
+              Total Amount:
+            </td>
+            <td
+              style="
+                padding: 10px;
+                font-weight: bold;
+                border-top: 2px solid #333;
+              "
+            >
+              [Total Amount]
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p style="margin-top: 20px; font-size: 14px; color: #777">
+        We will notify you again once your order has been shipped.
+        <br /><br />
+        If you have any questions, please feel free to contact us.
+      </p>
+
+      <div
+        style="
+          margin-top: 30px;
+          border-top: 1px solid #ddd;
+          padding-top: 10px;
+          font-size: 14px;
+          color: #999;
+        "
+      >
+        <p>Thank you again for your business.</p>
+        <p>[Your Company Name]</p>
+        <p>[Contact Information]</p>
+      </div>
+    </div>
+  </body>
+</html>

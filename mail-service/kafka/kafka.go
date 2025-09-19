@@ -65,6 +65,29 @@ func (signUpEvent *SignUpEvent) GetEmail() string {
 	return signUpEvent.Email
 }
 
+type PurchaseEvent struct {
+	Type        string `json:"type"`
+	Username    string `json:"username,omitempty"`
+	Email       string `json:"email,omitempty"`
+	TotalAmount int    `json:"totalAmount,omitempty"`
+}
+
+func (event *PurchaseEvent) Of() string {
+	return "purchase"
+}
+
+func (event *PurchaseEvent) GetType() string {
+	return event.Type
+}
+
+func (event *PurchaseEvent) GetUsername() string {
+	return event.Username
+}
+
+func (event *PurchaseEvent) GetEmail() string {
+	return event.Email
+}
+
 func NewConsumer() *ConsumerGroupHandler {
 	handler := NewMailHandler()
 	return &ConsumerGroupHandler{
@@ -111,6 +134,17 @@ func (handler *ConsumerGroupHandler) ConsumeClaim(
 				log.Println(err)
 			}
 
+		case "purchase-events":
+			var purchaseEvent PurchaseEvent
+			err := json.Unmarshal(msg.Value, &purchaseEvent)
+			if err != nil {
+				log.Println("cannot marshal")
+			}
+
+			err = handler.Handler.Send(&purchaseEvent)
+			if err != nil {
+				log.Println(err)
+			}
 		default:
 			log.Printf("caught unknown event. topic is [%s]", msg.Topic)
 		}

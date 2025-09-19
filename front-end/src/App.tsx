@@ -15,9 +15,9 @@ import { StateProvider } from "./context/StateContext";
 function App() {
   return (
     <BrowserRouter>
-      <ToastProvider>
-        <AuthProvider>
-          <StateProvider>
+      <AuthProvider>
+        <StateProvider>
+          <ToastProvider>
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route path="/" element={<Home />} />
@@ -29,9 +29,9 @@ function App() {
                 <Route path="/kids" element={<Kids />} />
               </Route>
             </Routes>
-          </StateProvider>
-        </AuthProvider>
-      </ToastProvider>
+          </ToastProvider>
+        </StateProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

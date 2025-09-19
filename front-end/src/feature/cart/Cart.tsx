@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import type { CartItemProps } from "./CartItem";
 import { CartItem } from "./CartItem";
 import useRootState from "../../hooks/useState";
+import useAuth from "../../hooks/useAuth";
+import { Post } from "../../util/Http";
+import { END_POINT } from "../../consts/Const";
+import useToast from "../../hooks/useToast";
 
 type CartInfo = {
   items: CartItemProps[];
@@ -13,6 +17,8 @@ export default function Cart() {
   });
 
   const { cartItems, setCartItems } = useRootState();
+  const { userId, userEmail } = useAuth();
+  const showToast = useToast();
   const info: CartInfo = {
     items: cartItems,
   };
@@ -24,6 +30,26 @@ export default function Cart() {
   const handleDelete = (id: string) => {
     const filtered = cartItems.filter((item) => item.id !== id);
     setCartItems(filtered);
+  };
+
+  const purchase = async () => {
+    try {
+      const resp = await Post<object>(END_POINT.PURCHASE, {
+        userId,
+        totalAmount,
+        email: userEmail,
+      });
+      if (resp.status !== 200) {
+        showToast("Error", resp.error.message, "error");
+        return;
+      }
+
+      setCartItems([]);
+      showToast("Success", "Thank you", "success");
+    } catch (err) {
+      console.log(err);
+      showToast("Error", "Purchase failed", "error");
+    }
   };
 
   return (
@@ -43,7 +69,7 @@ export default function Cart() {
             <div className="pt-10 pb-20 flex justify-center">
               <button
                 className="text-lg bg-blue-500 transition delay-150 duration-500 ease-in-out hover:bg-indigo-500 text-white"
-                onClick={() => console.log("check in")}
+                onClick={purchase}
               >
                 Purchase
               </button>
