@@ -71,26 +71,6 @@ cd project
 make down
 ```
 
-## 📋 利用可能なエンドポイント
-
-### API Gateway (Port: 8081)
-
-- `POST /authenticate` - ユーザー認証
-- `POST /sign-up` - ユーザー登録
-- `POST /log-out` - ログアウト
-- `GET /products` - 商品一覧取得
-- `GET /ping` - ヘルスチェック
-
-### フロントエンド (Port: 5173)
-
-- `/` - ホーム
-- `/men` - メンズ商品
-- `/women` - レディース商品
-- `/kids` - キッズ商品
-- `/cart` - ショッピングカート
-- `/user` - ユーザープロファイル
-- `/notifications` - 通知
-
 ## 🛠️ 開発
 
 ### バックエンド開発
@@ -136,6 +116,7 @@ npm run lint    # ESLintによるコードチェック
 - **HTTPルーター**: net/http (標準ライブラリ)
 - **メッセージング**: Apache Kafka
 - **データベース**: PostgreSQL, MongoDB
+- **通知サーバープッシュ**: WebSocket
 
 ### フロントエンド
 
@@ -175,4 +156,5 @@ e-commerce-demo/
 - ユーザー登録・認証
 - 商品カテゴリ別表示（メンズ、レディース、キッズ）
 - ショッピングカート
+- メールシステム
 - 通知システム
