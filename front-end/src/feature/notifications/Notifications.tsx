@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
+import useRootState from "../../hooks/useState";
 
 export type Notification = {
   date: string;
@@ -13,15 +14,8 @@ export function Notifications() {
     window.scrollTo({ left: 0, top: 0 });
   });
 
-  const datas: Notification[] = [
-    {
-      date: "2025/01/01",
-      subject: "New Arrivals",
-      category: "Products",
-    },
-  ];
-
   const { isAuthenticated } = useAuth();
+  const { notifications } = useRootState();
   const navigate = useNavigate();
   if (!isAuthenticated) {
     navigate("/user");
@@ -47,7 +41,7 @@ export function Notifications() {
                 </tr>
               </thead>
               <tbody>
-                {datas.map((data) => (
+                {notifications.map((data) => (
                   <tr className="h-10">
                     <td className="text-center">{data.date}</td>
                     <td className="text-center">{data.subject}</td>

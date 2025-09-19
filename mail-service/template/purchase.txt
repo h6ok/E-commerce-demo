@@ -1,0 +1,20 @@
+{{.Username}}
+
+Thank you for your recent purchase. We've included the details of your order below.
+
+Order Number: [Order Number]
+Order Date: [Order Date]
+
+[Product List]
+---------------------------------
+Total Amount: [TotalAmount]
+---------------------------------
+
+We will notify you again once your order has been shipped.
+
+If you have any questions, please feel free to contact us.
+
+Thank you again for your business.
+
+[Your Company Name]
+[Contact Information]

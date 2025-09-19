@@ -13,18 +13,17 @@ type ConsumerGroupHandler struct {
 }
 
 type Event interface {
-	GetContent() string
 	GetUsername() string
 	Of() string
 	GetType() string
 }
 
 type PurchaseEvent struct {
-	Type      string    `json:"type"`
-	Username  string    `json:"username,omitempty"`
-	Content   string    `json:"content"`
-	IP        string    `json:"ip"`
-	Timestamp time.Time `json:"timestamp"`
+	Type        string    `json:"type"`
+	Username    string    `json:"username,omitempty"`
+	TotalAmount string    `json:"totalAmount"`
+	IP          string    `json:"ip"`
+	Timestamp   time.Time `json:"timestamp"`
 }
 
 func (purchaseEvent *PurchaseEvent) Of() string {
@@ -37,10 +36,6 @@ func (purchaseEvent *PurchaseEvent) GetType() string {
 
 func (purchaseEvent *PurchaseEvent) GetUsername() string {
 	return purchaseEvent.Username
-}
-
-func (purchaseEvent *PurchaseEvent) GetContent() string {
-	return purchaseEvent.Content
 }
 
 func NewConsumer() *ConsumerGroupHandler {
@@ -82,4 +77,3 @@ func (handler *ConsumerGroupHandler) ConsumeClaim(
 	}
 	return nil
 }
-

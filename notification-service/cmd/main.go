@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"notification-service/cache"
 	"notification-service/kafka"
 	"time"
 
@@ -53,18 +56,31 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+type ConnectionData struct {
+	UserId string `json:"userId"`
+}
+
 func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return
 	}
+
 	defer conn.Close()
 
 	for {
 		messageType, msg, err := conn.ReadMessage()
 		if err != nil {
-			break
+			continue
+		}
+
+		var jsonData ConnectionData
+		err = json.Unmarshal(msg, &jsonData)
+		if err == nil {
+			fmt.Println("cache add")
+			cache.Add(jsonData.UserId, conn)
 		}
 		conn.WriteMessage(messageType, msg)
 	}
 }
+

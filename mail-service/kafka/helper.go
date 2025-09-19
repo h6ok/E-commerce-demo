@@ -10,10 +10,12 @@ import (
 )
 
 const (
-	authTemplateHtml   = "/app/auth.html"
-	authTemplateText   = "/app/auth.txt"
-	signUpTemplateHtml = "/app/sign-up.html"
-	signUpTemplateText = "/app/sign-up.txt"
+	authTemplateHtml     = "/app/auth.html"
+	authTemplateText     = "/app/auth.txt"
+	signUpTemplateHtml   = "/app/sign-up.html"
+	signUpTemplateText   = "/app/sign-up.txt"
+	purchaseTemplateHtml = "/app/purchase.html"
+	purchaseTemplateText = "/app/purchase.txt"
 )
 
 type Message struct {
@@ -59,6 +61,8 @@ func GetMessage(event Event) string {
 		return GetAuthMessage(event)
 	case "sign-up":
 		return GetSignUpMessage(event)
+	case "purchase":
+		return GetPurchaseMessage(event)
 	}
 	return ""
 }
@@ -125,6 +129,38 @@ func GetSignUpMessage(event Event) string {
 		From:     "E-Commerce-Demo Application",
 		To:       event.GetEmail(),
 		Subject:  "Sign-Up Notification Service",
+		HtmlBody: hb.String(),
+		TextBody: tb.String(),
+	}
+
+	return msg.BuildMessage()
+}
+
+func GetPurchaseMessage(event Event) string {
+	data := map[string]string{
+		"Username": event.GetUsername(),
+	}
+
+	// prep html template
+	var hb bytes.Buffer
+	ht := template.Must(template.ParseFiles(purchaseTemplateHtml))
+	err := ht.Execute(&hb, data)
+	if err != nil {
+		log.Panic()
+	}
+
+	// prep text template
+	var tb bytes.Buffer
+	tt := template.Must(template.ParseFiles(purchaseTemplateText))
+	err = tt.Execute(&tb, data)
+	if err != nil {
+		log.Panic()
+	}
+
+	msg := &Message{
+		From:     "E-Commerce-Demo Application",
+		To:       event.GetEmail(),
+		Subject:  "Purchase Notification",
 		HtmlBody: hb.String(),
 		TextBody: tb.String(),
 	}

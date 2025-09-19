@@ -58,7 +58,7 @@ services:
       dockerfile: ./../notification-service/notificationApp.dockerfile
     restart: always
     ports:
-      - "8080:8082"
+      - "8082:8082"
     deploy:
       mode: replicated
       replicas: 1
@@ -67,6 +67,17 @@ services:
     build:
       context: ./../product-service
       dockerfile: ./../product-service/productApp.dockerfile
+    restart: always
+    ports:
+      - "8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  purchase-service:
+    build:
+      context: ./../purchase-service
+      dockerfile: ./../purchase-service/purchaseApp.dockerfile
     restart: always
     ports:
       - "8080"
