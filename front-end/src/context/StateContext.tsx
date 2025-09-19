@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import type { Notification } from "../feature/notifications/Notifications";
 import type { CartItemProps } from "../feature/cart/CartItem";
+import type { ProductImgProps } from "../components/ProductImg";
 
 type RootState = {
   notifications: Notification[];
@@ -11,6 +12,8 @@ type RootState = {
   setCartItems: (cartItems: CartItemProps[]) => void;
   socket: WebSocket | null;
   setSocket: (socket: WebSocket | null) => void;
+  products: ProductImgProps[];
+  setProducts: (products: ProductImgProps[]) => void;
 };
 
 const StateContext = createContext<RootState | null>(null);
@@ -18,6 +21,7 @@ const StateContext = createContext<RootState | null>(null);
 function StateProvider(props: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
+  const [products, setProducts] = useState<ProductImgProps[]>([]);
   const [unread, setUnread] = useState(0);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
@@ -38,6 +42,8 @@ function StateProvider(props: { children: React.ReactNode }) {
     setCartItems,
     socket,
     setSocket,
+    products,
+    setProducts,
   };
 
   return (

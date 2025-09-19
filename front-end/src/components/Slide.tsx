@@ -8,6 +8,7 @@ export type SlideProps<T> = {
   linkTo?: string;
   linkLabel?: string;
   displayCategory?: boolean;
+  isHome?: boolean;
 };
 
 export default function Slide({
@@ -16,7 +17,10 @@ export default function Slide({
   displayCategory,
   linkTo,
   linkLabel,
+  isHome,
 }: SlideProps<ProductImgProps>) {
+  const displayItem = isHome ? content.slice(0, 3) : content;
+
   return (
     <>
       <div className="text-4xl flex items-center justify-center pt-10">
@@ -24,7 +28,7 @@ export default function Slide({
       </div>
       <div className="w-0.8 flex items-center justify-center pt-15">
         <div className="grid grid-cols-3 gap-30 pb-15">
-          {content.map((c) => (
+          {displayItem.map((c) => (
             <ProductImg {...c} displayCategory={displayCategory} />
           ))}
         </div>

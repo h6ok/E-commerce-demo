@@ -12,6 +12,7 @@ func main() {
 	mux.HandleFunc("/sign-up", handler.SignUp())
 	mux.HandleFunc("/ping", handler.Ping())
 	mux.HandleFunc("/log-out", handler.LogOut())
+	mux.HandleFunc("/products", handler.GetProducts())
 
 	router := CreateMiddleware(
 		EnableCORS,
