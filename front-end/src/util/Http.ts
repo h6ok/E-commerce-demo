@@ -29,4 +29,10 @@ async function Post<T>(
   return data;
 }
 
-export { Post };
+async function Get<T>(endPoint: string): Promise<Response<T>> {
+  const res = await fetch(endPoint);
+  const data = await res.json();
+  return data;
+}
+
+export { Post, Get };

@@ -1,0 +1,6 @@
+{
+  "port": "8080",
+  "driver": "postgres",
+  "dsn": "postgres://postgres:password@postgres-product:5432/product?sslmode=disable",
+  "key": "9828f104d90794c2d9c55f24803e82e8"
+}

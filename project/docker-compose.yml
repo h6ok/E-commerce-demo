@@ -63,6 +63,17 @@ services:
       mode: replicated
       replicas: 1
 
+  product-service:
+    build:
+      context: ./../product-service
+      dockerfile: ./../product-service/productApp.dockerfile
+    restart: always
+    ports:
+      - "8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -95,6 +106,17 @@ services:
       - "5432:5432"
     volumes:
       - ./sql/auth:/docker-entrypoint-initdb.d
+
+  postgres-product:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: product
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./sql/product:/docker-entrypoint-initdb.d
 
   mongo-log:
     image: mongo:latest

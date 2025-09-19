@@ -1,0 +1,35 @@
+CREATE TABLE "product" (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "name" varchar(255) NOT NULL,
+  "price" int NOT NULL,
+  "category" varchar(10) NOT NULL
+);
+
+INSERT INTO "product" (name, price, category) VALUES
+('Stylish Sweatshirt', 5500, 'men'),
+('Classic Polo Shirt', 3500, 'men'),
+('Sporty Hoodie', 6800, 'men'),
+('Casual Denim Jacket', 9200, 'men'),
+('Relaxed Fit Jeans', 7500, 'men'),
+('Formal Dress Shirt', 4800, 'men'),
+('Slim Fit Chinos', 6000, 'men'),
+('Winter Coat', 12000, 'men'),
+('Running Shorts', 2800, 'men'),
+('Elegant Evening Dress', 15000, 'women'),
+('Summer Sundress', 5200, 'women'),
+('High-Waisted Skirt', 4500, 'women'),
+('Cozy Knit Sweater', 7800, 'women'),
+('Leather Jacket', 18000, 'women'),
+('Office Blouse', 4200, 'women'),
+('Yoga Pants', 3800, 'women'),
+('Classic Trench Coat', 16000, 'women'),
+('Swimsuit', 6500, 'women'),
+('Playful Jumpsuit', 8900, 'kids'),
+('Dino T-shirt', 2200, 'kids'),
+('Cotton Leggings', 1800, 'kids'),
+('Warm Puffer Jacket', 9500, 'kids'),
+('Cute Graphic Tee', 2000, 'kids'),
+('Denim Overalls', 3200, 'kids'),
+('Hooded Sweatshirt', 4100, 'kids'),
+('Raincoat', 5000, 'kids'),
+('Sneakers', 5800, 'kids');
