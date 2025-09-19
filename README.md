@@ -3,6 +3,7 @@
 マイクロサービスアーキテクチャで構築されたEコマースデモアプリケーション
 
 ## 🏗️ アーキテクチャ
+<img width="500" height="500" alt="Image" src="https://github.com/user-attachments/assets/d8b39ebd-6260-4f7e-906b-9b209de00251" />
 
 このアプリケーションは以下のマイクロサービスで構成されています：
 
