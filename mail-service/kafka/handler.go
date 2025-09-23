@@ -13,11 +13,12 @@ type MailHandler struct {
 	Auth    smtp.Auth
 }
 
+// this mail handler uses "net/smtp", so you can't use sendgrid in this handler 
 const (
-	from     = "taharahiroaki10@gmail.com"
-	password = "nesucyhazwerlwpp"
-	host     = "smtp.gmail.com"
-	address  = "smtp.gmail.com:587"
+	from     = "xxxxxxxx@gmail.com" // your email to use smtp
+	password = "xxxxxxxxxxx" // your smtp　password
+	host     = "smtp.gmail.com" //　if you use gmail, you can use this host name. if not, change host name.
+	address  = "smtp.gmail.com:587" // if you use gmail, you can use this address. if not, change address.
 )
 
 func NewMailHandler() *MailHandler {
@@ -34,7 +35,7 @@ func NewMailHandler() *MailHandler {
 func (handler *MailHandler) Send(event Event) error {
 
 	// connect to smtp server
-	c, err := smtp.Dial("smtp.gmail.com:587")
+	c, err := smtp.Dial(address)
 	if err != nil {
 		return err
 	}
