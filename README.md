@@ -36,6 +36,7 @@
 - Make
 - Go 1.19+ (開発時)
 - Node.js 18+ (フロントエンド開発時)
+- GmailアカウントをSMTPで使用します
 
 ### 1. リポジトリをクローン
 
@@ -44,7 +45,11 @@ git clone <repository-url>
 cd e-commerce-demo
 ```
 
-### 2. アプリケーション全体を起動
+### 2. メールサービスのSMTP設定
+``` cd mail-service/kafka```
+handler.go を開き、16行目以降の値を設定
+
+### 3. アプリケーション全体を起動
 
 ```bash
 cd project
@@ -57,7 +62,7 @@ make up_build
 - Dockerイメージの作成
 - Docker Composeによる全サービスの起動
 
-### 3. フロントエンドの起動（開発時）
+### 4. フロントエンドの起動（開発時）
 
 ```bash
 cd front-end
@@ -65,11 +70,11 @@ npm install
 npm run dev
 ```
 
-### 4. アプリケーション停止
+### 5. アプリケーション停止
 
 ```bash
 cd project
-make down
+make down_remove
 ```
 
 ## 🛠️ 開発
